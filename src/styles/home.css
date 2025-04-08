@@ -1,0 +1,11 @@
+.embla {
+    overflow: hidden;
+}
+.embla__container {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.embla__slide {
+    flex: 0 0 160px; /* Slide covers 200px of the viewport */
+    min-width: 0;
+}
