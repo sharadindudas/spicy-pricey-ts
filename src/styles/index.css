@@ -124,7 +124,7 @@
 }
 
 html {
-    @apply font-inter overflow-hidden;
+    @apply font-inter;
 }
 
 .orange-hover {

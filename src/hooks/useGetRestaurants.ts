@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "@/utils/constants";
-import { CardId, TopChainType, WhatsOnMindSectionType } from "@/types/types";
+import {
+    CardId,
+    RestaurantInfoType,
+    WhatsOnMindSectionType
+} from "@/types/types";
 
 const useGetRestaurants = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [WhatsOnMind, setWhatsOnMind] = useState<
         [] | WhatsOnMindSectionType[]
     >([]);
-    const [TopChain, setTopChain] = useState<[] | TopChainType[]>([]);
-    const [AllRestaurants, setAllRestaurants] = useState([]);
+    const [TopChain, setTopChain] = useState<[] | RestaurantInfoType[]>([]);
+    const [AllRestaurants, setAllRestaurants] = useState<
+        [] | RestaurantInfoType[]
+    >([]);
 
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -39,16 +45,21 @@ const useGetRestaurants = () => {
                         obj?.card?.card?.id?.includes("top_brands")
                     )
                     ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map(
-                        (item: { info: TopChainType }) => ({
+                        (item: { info: RestaurantInfoType }) => ({
                             ...item?.info
                         })
                     );
                 setTopChain(topChainSection);
 
-                const allRestaurantsSection = json?.data?.cards?.find(
-                    (obj: CardId) =>
+                const allRestaurantsSection = json?.data?.cards
+                    ?.find((obj: CardId) =>
                         obj?.card?.card?.id?.includes("restaurant_grid_listing")
-                )?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+                    )
+                    ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map(
+                        (item: { info: RestaurantInfoType }) => ({
+                            ...item?.info
+                        })
+                    );
                 setAllRestaurants(allRestaurantsSection);
             } catch (err) {
                 console.error(err);

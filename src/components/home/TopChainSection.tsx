@@ -1,5 +1,5 @@
-import { TopChainType } from "@/types/types";
-import RestaurantCard from "@/components/common/RestaurantCard";
+import { RestaurantInfoType } from "@/types/types";
+import TopChainCard from "@/components/common/TopChainCard";
 import {
     Carousel,
     CarouselContent,
@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/carousel";
 import { Link } from "react-router";
 
-const TopChainSection = ({ data: topChainData }: { data: TopChainType[] }) => {
+const TopChainSection = ({
+    data: topChainData
+}: {
+    data: RestaurantInfoType[];
+}) => {
     return (
         <>
             {topChainData && topChainData?.length > 0 && (
@@ -30,10 +34,10 @@ const TopChainSection = ({ data: topChainData }: { data: TopChainType[] }) => {
                                         className="basis-auto"
                                     >
                                         <Link
-                                            className="relative block transition-all hover:scale-95"
-                                            to={`/restaurants/${res?.id}`}
+                                            className="block transition-all hover:scale-95"
+                                            to={`/restaurant/menu/${res?.id}`}
                                         >
-                                            <RestaurantCard {...res} />
+                                            <TopChainCard {...res} />
                                         </Link>
                                     </CarouselItem>
                                 ))}

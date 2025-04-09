@@ -2,7 +2,7 @@ import { RestaurantInfoType } from "@/types/types";
 import { RESTAURANT_IMG, RESTAURANT_IMG_GRAYSCALE } from "@/utils/constants";
 import { truncateString } from "@/utils/truncateString";
 
-const RestaurantCard = (props: RestaurantInfoType) => {
+const TopChainCard = (props: RestaurantInfoType) => {
     const {
         areaName,
         name,
@@ -17,7 +17,7 @@ const RestaurantCard = (props: RestaurantInfoType) => {
     return (
         <>
             <div className="flex flex-col gap-2 cursor-pointer">
-                <div className="w-[350px] h-64 relative rounded-xl">
+                <div className="w-72 h-48 relative rounded-xl">
                     {isOpen ? (
                         <img
                             src={RESTAURANT_IMG + cloudinaryImageId}
@@ -90,4 +90,4 @@ const RestaurantCard = (props: RestaurantInfoType) => {
     );
 };
 
-export default RestaurantCard;
+export default TopChainCard;

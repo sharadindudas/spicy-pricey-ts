@@ -1,0 +1,14 @@
+.notopen-message {
+    color: rgb(245, 126, 71);
+    background-color: #f1f1f6;
+    border-radius: 8px;
+    position: relative;
+    padding: 14px 18px 14px 16px;
+    margin-top: 16px;
+    font-weight: 400;
+}
+
+.rupee:before {
+    content: "\20B9";
+    margin-right: 0.1rem;
+}

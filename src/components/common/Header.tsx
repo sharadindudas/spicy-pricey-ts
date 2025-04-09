@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa";
 
 const Header = () => {
     return (
-        <header className="py-2 shadow-md sticky w-full top-0 left-0 right-0">
+        <header className="py-2 shadow-md sticky w-full top-0 left-0 right-0 z-10 bg-white">
             <div className="container mx-auto flex justify-between items-center text-base">
                 <div className="flex items-center gap-5">
                     <Link to="/">

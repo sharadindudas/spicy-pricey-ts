@@ -9,4 +9,13 @@ const RESTAURANT_IMG =
 const RESTAURANT_IMG_GRAYSCALE =
     "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660,e_grayscale/";
 
-export { BACKEND_URL, WHATSONMIND_IMG_URL, RESTAURANT_IMG, RESTAURANT_IMG_GRAYSCALE };
+const RESTAURANT_MENU_IMG =
+    "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/";
+
+export {
+    BACKEND_URL,
+    WHATSONMIND_IMG_URL,
+    RESTAURANT_IMG,
+    RESTAURANT_IMG_GRAYSCALE,
+    RESTAURANT_MENU_IMG
+};
