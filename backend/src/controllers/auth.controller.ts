@@ -1,10 +1,11 @@
 import { AsyncHandler, ErrorHandler } from "../utils/handlers";
 import { UserModel } from "../models/user.model";
 import { LoginSchema, SignupSchema } from "../schemas/auth.schema";
-import { RequestHandler } from "express";
+import { RequestHandler, Response } from "express";
+import { ApiResponse } from "../@types/types";
 
 // Signup
-const signup = AsyncHandler(async (req, res) => {
+const signup = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     // Get data from request body
     const signupData = req.body;
 
@@ -42,7 +43,7 @@ const signup = AsyncHandler(async (req, res) => {
 });
 
 // Login
-const login = AsyncHandler(async (req, res) => {
+const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     // Get data from request body
     const loginData = req.body;
 
@@ -88,7 +89,7 @@ const login = AsyncHandler(async (req, res) => {
 });
 
 // Logout
-const logout: RequestHandler = async (_req, res) => {
+const logout: RequestHandler = async (_req, res: Response<ApiResponse>) => {
     // Remove the cookie and return the response
     res.clearCookie("spicyPriceyToken", {
         httpOnly: true,
