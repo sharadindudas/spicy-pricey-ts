@@ -1,10 +1,10 @@
 import { Link } from "react-router";
-import { IoIosArrowDown } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
+import { UserRound } from "lucide-react";
+import LocationSidebar from "@/components/sidebar/LocationSidebar";
 
 const Header = () => {
     return (
-        <header className="py-2 shadow-md sticky w-full top-0 left-0 right-0 z-10 bg-white">
+        <header className="py-2 shadow-md sticky w-full top-0 left-0 right-0 z-10 bg-white px-5">
             <div className="container mx-auto flex justify-between items-center text-base">
                 <div className="flex items-center gap-5">
                     <Link to="/">
@@ -14,16 +14,11 @@ const Header = () => {
                             className="h-14 rounded-full border border-black"
                         />
                     </Link>
-                    <button className="flex items-center gap-2 group cursor-pointer font-semibold">
-                        <span className="group-hover:text-orange-500 transition-all duration-300 text-sm">
-                            Other
-                        </span>
-                        <IoIosArrowDown className="text-orange-500 text-lg" />
-                    </button>
+                    <LocationSidebar />
                 </div>
                 <div className="flex items-center gap-6">
                     <button className="flex items-center gap-2 cursor-pointer orange-hover font-medium">
-                        <FaUser />
+                        <UserRound className="w-5" />
                         <span>Login</span>
                     </button>
                     <Link

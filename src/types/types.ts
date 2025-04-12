@@ -76,3 +76,19 @@ export interface NestedItemCategoryType {
     title: string;
     categories: ItemCategoryType[];
 }
+
+// Location types
+export interface LocationType {
+    place_id: string;
+    structured_formatting: {
+        main_text: string;
+        secondary_text: string;
+    };
+}
+
+export interface LocationData {
+    city: string;
+    lat: number;
+    lng: number;
+    address: string;
+}

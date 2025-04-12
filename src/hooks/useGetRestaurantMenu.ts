@@ -3,7 +3,7 @@ import {
     RestaurantMenuCategoryType,
     RestaurantMenuInfoType
 } from "@/types/types";
-import { BACKEND_URL } from "@/utils/constants";
+import { BACKEND_URL } from "@/config/config";
 import { useEffect, useState } from "react";
 
 interface MenuDataType {

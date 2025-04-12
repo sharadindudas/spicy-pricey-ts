@@ -136,3 +136,21 @@ html {
     margin: 32px 0;
     color: rgba(2, 6, 12, 0.6);
 }
+
+.location-loader {
+    @apply border-4 border-orange-500 w-8 h-8;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

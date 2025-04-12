@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router";
 import Home from "@/pages/Home";
-import RestaurantMenu from "@/pages/RestaurantMenu";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import ScrollToTop from "@/components/common/ScrollToTop";
+import RestaurantMenu from "@/pages/RestaurantMenu";
+import Checkout from "@/pages/Checkout";
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                     path="/restaurant/menu/:resId"
                     element={<RestaurantMenu />}
                 />
+                <Route path="/checkout" element={<Checkout />} />
             </Routes>
             <ScrollToTop />
             <Footer />
