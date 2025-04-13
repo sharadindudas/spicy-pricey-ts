@@ -1,10 +1,10 @@
 import {
-    CardType,
     RestaurantMenuCategoryType,
     RestaurantMenuInfoType
 } from "@/types/types";
-import { BACKEND_URL } from "@/config/config";
+import { PROXY_URL } from "@/config/config";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface MenuDataType {
     card: {
@@ -13,6 +13,14 @@ interface MenuDataType {
             title: string;
             itemCards: [];
             categories: [];
+        };
+    };
+}
+
+interface RestaurantCardType {
+    card: {
+        card: {
+            "@type": string;
         };
     };
 }
@@ -28,26 +36,24 @@ const useGetRestaurantMenu = (resId: string) => {
         const fetchRestaurantMenu = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(
-                    BACKEND_URL +
+                const {data} = await axios.get(
+                    PROXY_URL +
                         `/api/proxy/swiggy/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=22.56430&lng=88.36930&restaurantId=${resId}`
                 );
-                const json = await response.json();
-
-                const restaurantInfo = json?.data?.cards?.find(
-                    (item: CardType) =>
+                const restaurantInfo = data?.data?.cards?.find(
+                    (item: RestaurantCardType) =>
                         item?.card?.card["@type"]?.includes(
                             "food.v2.Restaurant"
                         )
                 )?.card?.card?.info;
                 setResInfo(restaurantInfo);
 
-                const menuData = json?.data?.cards
+                const menuData = data?.data?.cards
                     ?.find(
                         (item: { groupedCard: unknown }) => item?.groupedCard
                     )
                     ?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
-                        (item: CardType) =>
+                        (item: RestaurantCardType) =>
                             item?.card?.card["@type"]?.includes(
                                 "ItemCategory"
                             ) ||
@@ -55,8 +61,8 @@ const useGetRestaurantMenu = (resId: string) => {
                                 "NestedItemCategory"
                             )
                     );
-                const structuredMenuData =
-                    menuData?.map((item: MenuDataType) => {
+                const structuredMenuData = menuData?.map(
+                    (item: MenuDataType) => {
                         const type = item?.card?.card["@type"];
                         const title = item?.card?.card?.title;
                         const itemCards = item?.card?.card?.itemCards || [];
@@ -85,7 +91,8 @@ const useGetRestaurantMenu = (resId: string) => {
                                 itemCards
                             };
                         }
-                    });
+                    }
+                );
                 setResMenu(structuredMenuData);
             } catch (err) {
                 console.error(err);

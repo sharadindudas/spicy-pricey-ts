@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router";
+import { Toaster } from "react-hot-toast";
 import Home from "@/pages/Home";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import Header from "@/components/common/Header";
@@ -19,6 +20,7 @@ const App = () => {
                 <Route path="/checkout" element={<Checkout />} />
             </Routes>
             <ScrollToTop />
+            <Toaster />
             <Footer />
         </>
     );

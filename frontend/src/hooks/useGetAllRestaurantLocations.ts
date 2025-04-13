@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "@/config/config";
-import { LocationType } from "@/types/types";
+import { PROXY_URL } from "@/config/config";
 import useDebounce from "./useDebounce";
+import axios from "axios";
+
+interface LocationType {
+    place_id: string;
+    structured_formatting: {
+        main_text: string;
+        secondary_text: string;
+    };
+}
 
 const useGetAllRestaurantLocations = () => {
     const [searchInput, setSearchInput] = useState("");
@@ -14,13 +22,12 @@ const useGetAllRestaurantLocations = () => {
             setIsSearching(true);
             const fetchRestaurantLocations = async () => {
                 try {
-                    const response = await fetch(
-                        BACKEND_URL +
+                    const { data } = await axios.get(
+                        PROXY_URL +
                             `/api/proxy/swiggy/dapi/misc/place-autocomplete?input=${debouncedSearchInput}`
                     );
-                    const json = await response.json();
                     setLocations(
-                        json?.data?.map((item: LocationType) => {
+                        data?.data?.map((item: LocationType) => {
                             return {
                                 place_id: item?.place_id,
                                 structured_formatting: {

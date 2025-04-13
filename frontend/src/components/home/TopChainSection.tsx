@@ -10,9 +10,11 @@ import {
 import { Link } from "react-router";
 
 const TopChainSection = ({
-    data: topChainData
+    data: topChainData,
+    city
 }: {
     data: RestaurantInfoType[];
+    city: string;
 }) => {
     return (
         <>
@@ -20,7 +22,7 @@ const TopChainSection = ({
                 <>
                     <section>
                         <h2 className="text-2xl mb-7 font-bold">
-                            Top restaurant chains in Kolkata
+                            Top restaurant chains in {city}
                         </h2>
                         <Carousel>
                             <div className="absolute -top-11 right-10 sm:block hidden">

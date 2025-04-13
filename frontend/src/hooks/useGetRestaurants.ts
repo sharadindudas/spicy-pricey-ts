@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { BACKEND_URL } from "@/config/config";
-import {
-    CardId,
-    RestaurantInfoType,
-    WhatsOnMindSectionType
-} from "@/types/types";
+import { PROXY_URL } from "@/config/config";
+import { RestaurantInfoType, WhatsOnMindSectionType } from "@/types/types";
 import { useAppSelector } from "@/store/hooks";
+import axios from "axios";
+
+interface RestaurantCardIdentifier {
+    card: {
+        card: {
+            id: string;
+        };
+    };
+}
 
 const useGetRestaurants = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -22,15 +27,13 @@ const useGetRestaurants = () => {
     const fetchRestaurants = async (lat: number, lng: number) => {
         setIsLoading(true);
         try {
-            const response = await fetch(
-                BACKEND_URL +
+            const { data } = await axios.get(
+                PROXY_URL +
                     `/api/proxy/swiggy/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}`
             );
-            const json = await response.json();
-
             const whatsOnMindSection: WhatsOnMindSectionType[] =
-                json?.data?.cards
-                    ?.find((obj: CardId) =>
+                data?.data?.cards
+                    ?.find((obj: RestaurantCardIdentifier) =>
                         obj?.card?.card?.id?.includes("mind")
                     )
                     ?.card?.card?.gridElements?.infoWithStyle?.info?.map(
@@ -42,8 +45,8 @@ const useGetRestaurants = () => {
                     );
             setWhatsOnMind(whatsOnMindSection);
 
-            const topChainSection = json?.data?.cards
-                ?.find((obj: CardId) =>
+            const topChainSection = data?.data?.cards
+                ?.find((obj: RestaurantCardIdentifier) =>
                     obj?.card?.card?.id?.includes("top_brands")
                 )
                 ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map(
@@ -53,8 +56,8 @@ const useGetRestaurants = () => {
                 );
             setTopChain(topChainSection);
 
-            const allRestaurantsSection = json?.data?.cards
-                ?.find((obj: CardId) =>
+            const allRestaurantsSection = data?.data?.cards
+                ?.find((obj: RestaurantCardIdentifier) =>
                     obj?.card?.card?.id?.includes("restaurant_grid_listing")
                 )
                 ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map(

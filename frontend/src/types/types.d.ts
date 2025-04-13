@@ -1,19 +1,4 @@
-export interface CardId {
-    card: {
-        card: {
-            id: string;
-        };
-    };
-}
-
-export interface CardType {
-    card: {
-        card: {
-            "@type": string;
-        };
-    };
-}
-
+// Home page
 export interface WhatsOnMindSectionType {
     id: string;
     imageId: string;
@@ -33,6 +18,7 @@ export interface RestaurantInfoType {
     };
 }
 
+// Menu page
 export interface RestaurantMenuInfoType {
     name: string;
     city: string;
@@ -51,12 +37,6 @@ export interface RestaurantMenuCategoryType {
     categories?: [];
 }
 
-export interface ItemCardType {
-    card: {
-        info: MenuItemType;
-    };
-}
-
 export interface MenuItemType {
     id: string;
     name: string;
@@ -69,7 +49,11 @@ export interface MenuItemType {
 
 export interface ItemCategoryType {
     title: string;
-    itemCards: ItemCardType[];
+    itemCards: [
+        card: {
+            info: MenuItemType;
+        }
+    ];
 }
 
 export interface NestedItemCategoryType {
@@ -77,18 +61,26 @@ export interface NestedItemCategoryType {
     categories: ItemCategoryType[];
 }
 
-// Location types
-export interface LocationType {
-    place_id: string;
-    structured_formatting: {
-        main_text: string;
-        secondary_text: string;
-    };
+// Common
+export interface ApiResponse {
+    success: boolean;
+    message: string;
+    data?: unknown;
 }
 
-export interface LocationData {
+export interface Location {
     city: string;
     lat: number;
     lng: number;
     address: string;
+}
+
+export interface User {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: "user" | "admin";
+    createdAt: Date;
+    updatedAt: Date;
 }

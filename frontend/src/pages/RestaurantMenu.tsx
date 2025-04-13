@@ -15,7 +15,7 @@ const RestaurantMenu = () => {
         return <ShimmerMenu />;
 
     return (
-        <div className="mx-auto my-7 2xl:w-1/2 md:w-4/5 sm:px-7 px-2">
+        <div className="mx-auto my-7 2xl:w-1/2 md:w-4/5 sm:px-7 px-2 min-h-screen">
             <>
                 <RestaurantInfo data={resInfo} />
                 <hr className="border-1 border-dashed border-b-[#d3d3d3] my-4"></hr>

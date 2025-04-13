@@ -1,5 +1,5 @@
 const Checkout = () => {
-  return <div>Checkout</div>;
+    return <div className="min-h-screen">Checkout</div>;
 };
 
 export default Checkout;

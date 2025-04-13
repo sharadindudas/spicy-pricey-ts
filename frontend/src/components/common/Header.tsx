@@ -1,8 +1,12 @@
 import { Link } from "react-router";
-import { UserRound } from "lucide-react";
 import LocationSidebar from "@/components/sidebar/LocationSidebar";
+import AuthSidebar from "@/components/sidebar/AuthSidebar";
+import UserDetails from "@/components/header/UserDetails";
+import { useAppSelector } from "@/store/hooks";
 
 const Header = () => {
+    const user = useAppSelector((store) => store.user.user);
+
     return (
         <header className="py-2 shadow-md sticky w-full top-0 left-0 right-0 z-10 bg-white px-5">
             <div className="container mx-auto flex justify-between items-center text-base">
@@ -17,10 +21,7 @@ const Header = () => {
                     <LocationSidebar />
                 </div>
                 <div className="flex items-center gap-6">
-                    <button className="flex items-center gap-2 cursor-pointer orange-hover font-medium">
-                        <UserRound className="w-5" />
-                        <span>Login</span>
-                    </button>
+                    {user ? <UserDetails user={user} /> : <AuthSidebar />}
                     <Link
                         to="/checkout"
                         className="flex items-center gap-2 group orange-hover font-medium"

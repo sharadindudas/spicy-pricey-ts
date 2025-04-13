@@ -1,8 +1,8 @@
-import { LocationData } from "@/types/types";
+import { Location } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface LocationState {
-    location: null | LocationData;
+    location: null | Location;
 }
 
 const initialState: LocationState = {
@@ -13,7 +13,7 @@ const locationSlice = createSlice({
     name: "location",
     initialState,
     reducers: {
-        setLocation: (state, action: PayloadAction<LocationData | null>) => {
+        setLocation: (state, action: PayloadAction<Location | null>) => {
             state.location = action.payload;
         },
         clearLocation: (state) => {

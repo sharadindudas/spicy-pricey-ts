@@ -13,6 +13,7 @@ import LocationLoader from "@/components/common/LocationLoader";
 import useGetAllRestaurantLocations from "@/hooks/useGetAllRestaurantLocations";
 import useSetRestaurantLocation from "@/hooks/useSetRestaurantLocation";
 import { useState } from "react";
+import { useAppSelector } from "@/store/hooks";
 
 const LocationSidebar = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,6 +25,8 @@ const LocationSidebar = () => {
         setLocations
     } = useGetAllRestaurantLocations();
     const { fetchCurrentLocation } = useSetRestaurantLocation();
+
+    const location = useAppSelector((store) => store.location.location);
 
     const handleLocation = (placeid: string) => {
         fetchCurrentLocation(placeid);
@@ -37,7 +40,7 @@ const LocationSidebar = () => {
             <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
                 <SheetTrigger className="flex items-center gap-1 group cursor-pointer font-semibold">
                     <span className="group-hover:text-orange-500 transition-all duration-300 text-sm">
-                        Other
+                        {location?.address || "Other"}
                     </span>
                     <ChevronDown className="text-orange-500 w-5" />
                 </SheetTrigger>

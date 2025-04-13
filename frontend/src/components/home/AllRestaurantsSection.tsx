@@ -3,9 +3,11 @@ import { Link } from "react-router";
 import RestaurantCard from "@/components/common/RestaurantCard";
 
 const AllRestaurantsSection = ({
-    data: restaurantsData
+    data: restaurantsData,
+    city
 }: {
     data: RestaurantInfoType[];
+    city: string;
 }) => {
     return (
         <>
@@ -13,7 +15,7 @@ const AllRestaurantsSection = ({
                 <>
                     <section>
                         <h2 className="text-2xl mb-7 font-bold">
-                            Restaurants with online food delivery in Kolkata
+                            Restaurants with online food delivery in {city}
                         </h2>
                         <div className="flex flex-wrap justify-center items-center gap-8">
                             {restaurantsData?.map((res) => (
