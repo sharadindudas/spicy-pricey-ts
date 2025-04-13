@@ -15,7 +15,16 @@ export interface RestaurantInfoType {
     isOpen: boolean;
     sla: {
         slaString: string;
+        deliveryTime: number;
     };
+    badges: {
+        imageBadges;
+    };
+    aggregatedDiscountInfoV3: {
+        header: string;
+        subHeader: string;
+    };
+    costForTwo: string;
 }
 
 // Menu page

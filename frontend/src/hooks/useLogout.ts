@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/store/hooks";
+import { removeLocation } from "@/store/slices/locationSlice";
 import { removeUser } from "@/store/slices/userSlice";
 import { ApiResponse } from "@/types/types";
 import { axiosInstance } from "@/utils/axiosInstance";
@@ -16,6 +17,7 @@ const useLogout = () => {
             );
             if (response.data.success) {
                 dispatch(removeUser());
+                dispatch(removeLocation());
                 toast.success(
                     response.data.message || "Logged out successfully"
                 );

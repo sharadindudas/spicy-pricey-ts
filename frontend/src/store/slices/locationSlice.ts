@@ -16,11 +16,11 @@ const locationSlice = createSlice({
         setLocation: (state, action: PayloadAction<Location | null>) => {
             state.location = action.payload;
         },
-        clearLocation: (state) => {
+        removeLocation: (state) => {
             state.location = null;
         }
     }
 });
 
-export const { setLocation } = locationSlice.actions;
+export const { setLocation, removeLocation } = locationSlice.actions;
 export default locationSlice.reducer;

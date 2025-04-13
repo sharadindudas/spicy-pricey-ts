@@ -21,6 +21,9 @@ const useGetRestaurants = () => {
     const [AllRestaurants, setAllRestaurants] = useState<
         [] | RestaurantInfoType[]
     >([]);
+    const [FilteredRestaurants, setFilteredRestaurants] = useState<
+        [] | RestaurantInfoType[]
+    >([]);
 
     const location = useAppSelector((store) => store.location.location);
 
@@ -66,6 +69,7 @@ const useGetRestaurants = () => {
                     })
                 );
             setAllRestaurants(allRestaurantsSection);
+            setFilteredRestaurants(allRestaurantsSection);
         } catch (err) {
             console.error(err);
         } finally {
@@ -85,7 +89,9 @@ const useGetRestaurants = () => {
         isLoading,
         WhatsOnMind,
         TopChain,
-        AllRestaurants
+        AllRestaurants,
+        FilteredRestaurants,
+        setFilteredRestaurants
     };
 };
 

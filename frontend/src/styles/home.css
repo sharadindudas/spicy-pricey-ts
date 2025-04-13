@@ -1,0 +1,5 @@
+@reference "tailwindcss/theme.css";
+
+.filter-btn {
+    @apply h-10 rounded-3xl cursor-pointer shadow-sm;
+}
