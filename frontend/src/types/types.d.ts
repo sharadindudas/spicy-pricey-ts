@@ -46,6 +46,12 @@ export interface RestaurantMenuCategoryType {
     categories?: [];
 }
 
+export interface ItemCardType {
+    card: {
+        info: MenuItemType;
+    };
+}
+
 export interface MenuItemType {
     id: string;
     name: string;
@@ -58,11 +64,7 @@ export interface MenuItemType {
 
 export interface ItemCategoryType {
     title: string;
-    itemCards: [
-        card: {
-            info: MenuItemType;
-        }
-    ];
+    itemCards: ItemCardType[];
 }
 
 export interface NestedItemCategoryType {
