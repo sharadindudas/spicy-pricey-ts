@@ -1,11 +1,10 @@
-import { ChevronDown } from "lucide-react";
-import { MapPin } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/loader/Loader";
 import useGetAllRestaurantLocations from "@/hooks/useGetAllRestaurantLocations";
 import useSetRestaurantLocation from "@/hooks/useSetRestaurantLocation";
-import { useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 
 const LocationSidebar = () => {

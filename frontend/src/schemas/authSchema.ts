@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import validator from "validator";
-import { passwordSchema } from "./common";
+import { emailSchema, passwordSchema, phoneSchema } from "./common";
 
 // Login schema
 export const LoginSchema = yup.object({
@@ -14,3 +14,17 @@ export const LoginSchema = yup.object({
     password: passwordSchema
 });
 export type LoginSchemaType = yup.InferType<typeof LoginSchema>;
+
+// Signup schema
+export const SignupSchema = yup.object({
+    name: yup
+        .string()
+        .trim()
+        .required("Please provide a name")
+        .min(6, "Name must be at least 6 characters")
+        .max(50, "Name must not exceed 50 characters"),
+    email: emailSchema,
+    phone: phoneSchema,
+    password: passwordSchema
+});
+export type SignupSchemaType = yup.InferType<typeof SignupSchema>;

@@ -76,6 +76,8 @@ export interface NestedItemCategoryType {
 }
 
 // Common
+export type setStateBooleanType = React.Dispatch<React.SetStateAction<boolean>>;
+
 export interface ApiResponse {
     success: boolean;
     message: string;

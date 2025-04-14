@@ -1,14 +1,14 @@
 import { LoginSchemaType } from "@/schemas/authSchema";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/userSlice";
-import { ApiResponse, User } from "@/types/types";
+import { ApiResponse, setStateBooleanType, User } from "@/types/types";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { UseFormReset } from "react-hook-form";
 import toast from "react-hot-toast";
 
-const useLogin = (reset: UseFormReset<LoginSchemaType>, setIsSidebarOpen: Dispatch<SetStateAction<boolean>>) => {
+const useLogin = (reset: UseFormReset<LoginSchemaType>, setIsSidebarOpen: setStateBooleanType) => {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useAppDispatch();
 
