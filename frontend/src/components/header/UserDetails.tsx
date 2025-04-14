@@ -27,16 +27,11 @@ const UserDetails = ({ user }: { user: User }) => {
                 <DropdownMenuContent className="min-w-[10rem]">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer pb-2">
-                        Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer pb-2">
-                        Orders
-                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer pb-2">Profile</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer pb-2">Orders</DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={onLogout}
-                        className="cursor-pointer pb-2"
-                    >
+                        className="cursor-pointer pb-2">
                         Logout
                     </DropdownMenuItem>
                 </DropdownMenuContent>

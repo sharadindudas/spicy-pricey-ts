@@ -20,6 +20,9 @@ export interface RestaurantInfoType {
     badges: {
         imageBadges;
     };
+    aggregatedDiscountInfoV2: {
+        header: string;
+    };
     aggregatedDiscountInfoV3: {
         header: string;
         subHeader: string;

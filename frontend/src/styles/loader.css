@@ -1,3 +1,5 @@
+@reference "tailwindcss/theme.css";
+
 .carousel-loading {
     background-color: #171a29;
     color: hsla(0, 0%, 100%, 0.8);
@@ -55,5 +57,23 @@
 
     to {
         background-position: 1000px 0;
+    }
+}
+
+.loader {
+    @apply border-4 border-orange-500 w-8 h-8;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }

@@ -8,10 +8,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReset } from "react-hook-form";
 import toast from "react-hot-toast";
 
-const useLogin = (
-    reset: UseFormReset<LoginSchemaType>,
-    setIsSidebarOpen: Dispatch<SetStateAction<boolean>>
-) => {
+const useLogin = (reset: UseFormReset<LoginSchemaType>, setIsSidebarOpen: Dispatch<SetStateAction<boolean>>) => {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useAppDispatch();
 
@@ -19,14 +16,9 @@ const useLogin = (
         setIsLoading(true);
         const toastId = toast.loading("Loading...");
         try {
-            const response = await axiosInstance.post<ApiResponse>(
-                "/auth/login",
-                data
-            );
+            const response = await axiosInstance.post<ApiResponse>("/auth/login", data);
             if (response.data.success) {
-                toast.success(
-                    response.data.message || "Logged in successfully"
-                );
+                toast.success(response.data.message || "Logged in successfully");
                 dispatch(setUser(response.data.data as User));
                 reset();
                 setIsSidebarOpen(false);

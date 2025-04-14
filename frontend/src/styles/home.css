@@ -3,3 +3,8 @@
 .filter-btn {
     @apply h-10 rounded-3xl cursor-pointer shadow-sm;
 }
+
+.res-img-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.15) 60%, rgba(0, 0, 0, 0) 100%);
+    @apply absolute inset-0 w-full h-full rounded-xl;
+}

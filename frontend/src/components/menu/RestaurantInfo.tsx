@@ -1,31 +1,20 @@
 import { RestaurantMenuInfoType } from "@/types/types";
 import { Link } from "react-router";
 
-const RestaurantInfo = ({
-    data: resInfo
-}: {
-    data: RestaurantMenuInfoType;
-}) => {
-    const {
-        name,
-        city,
-        cuisines,
-        areaName,
-        sla,
-        avgRating,
-        totalRatingsString
-    } = resInfo;
+const RestaurantInfo = ({ data: resInfo }: { data: RestaurantMenuInfoType }) => {
+    const { name, city, cuisines, areaName, sla, avgRating, totalRatingsString } = resInfo;
 
     return (
         <>
             {/* Breadcrumb */}
-            <div className="flex" aria-label="Breadcrumb">
+            <div
+                className="flex"
+                aria-label="Breadcrumb">
                 <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                     <li className="inline-flex items-center">
                         <Link
                             to="/"
-                            className="inline-flex items-center text-xs font-medium"
-                        >
+                            className="inline-flex items-center text-xs font-medium">
                             Home
                         </Link>
                     </li>
@@ -36,8 +25,7 @@ const RestaurantInfo = ({
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
-                                viewBox="0 0 6 10"
-                            >
+                                viewBox="0 0 6 10">
                                 <path
                                     stroke="currentColor"
                                     strokeLinecap="round"
@@ -46,9 +34,7 @@ const RestaurantInfo = ({
                                     d="m1 9 4-4-4-4"
                                 />
                             </svg>
-                            <span className="ms-1 text-xs font-medium">
-                                {city}
-                            </span>
+                            <span className="ms-1 text-xs font-medium">{city}</span>
                         </div>
                     </li>
                     <li aria-current="page">
@@ -58,8 +44,7 @@ const RestaurantInfo = ({
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
-                                viewBox="0 0 6 10"
-                            >
+                                viewBox="0 0 6 10">
                                 <path
                                     stroke="currentColor"
                                     strokeLinecap="round"
@@ -68,9 +53,7 @@ const RestaurantInfo = ({
                                     d="m1 9 4-4-4-4"
                                 />
                             </svg>
-                            <span className="ms-1 text-xs font-medium text-[#535665]">
-                                {name}
-                            </span>
+                            <span className="ms-1 text-xs font-medium text-[#535665]">{name}</span>
                         </div>
                     </li>
                 </ol>
@@ -84,9 +67,7 @@ const RestaurantInfo = ({
                     <div className="text-gray-600">
                         {areaName}, {sla?.lastMileTravelString}
                     </div>
-                    <div className="text-gray-600 font-semibold">
-                        {sla.slaString?.toLowerCase()}
-                    </div>
+                    <div className="text-gray-600 font-semibold">{sla.slaString?.toLowerCase()}</div>
                 </div>
                 {avgRating && (
                     <div>
@@ -101,9 +82,7 @@ const RestaurantInfo = ({
                                 </span>
                                 <span className="text-sm">{avgRating}</span>
                             </div>
-                            <div className="text-xs text-[#8b8d97] font-bold tracking-tighter">
-                                {totalRatingsString}
-                            </div>
+                            <div className="text-xs text-[#8b8d97] font-bold tracking-tighter">{totalRatingsString}</div>
                         </button>
                     </div>
                 )}

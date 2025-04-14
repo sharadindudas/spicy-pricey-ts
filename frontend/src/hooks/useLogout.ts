@@ -12,15 +12,11 @@ const useLogout = () => {
     const handleLogout = async () => {
         const toastId = toast.loading("Loading...");
         try {
-            const response = await axiosInstance.post<ApiResponse>(
-                "/auth/logout"
-            );
+            const response = await axiosInstance.post<ApiResponse>("/auth/logout");
             if (response.data.success) {
                 dispatch(removeUser());
                 dispatch(removeLocation());
-                toast.success(
-                    response.data.message || "Logged out successfully"
-                );
+                toast.success(response.data.message || "Logged out successfully");
             }
         } catch (err) {
             if (err instanceof AxiosError) {

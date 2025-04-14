@@ -1,11 +1,6 @@
 import { NestedItemCategoryType } from "@/types/types";
 import MenuItem from "./MenuItem";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const NestedItemCategory = ({ data }: { data: NestedItemCategoryType }) => {
     const { title, categories } = data;
@@ -18,12 +13,12 @@ const NestedItemCategory = ({ data }: { data: NestedItemCategoryType }) => {
                     <Accordion
                         key={subcategory?.title}
                         type="single"
-                        collapsible
-                    >
-                        <AccordionItem className="ml-3" value="accordion-item">
+                        collapsible>
+                        <AccordionItem
+                            className="ml-3"
+                            value="accordion-item">
                             <AccordionTrigger className="bg-white w-full shadow-md p-4.5 text-base font-bold cursor-pointer">
-                                {subcategory?.title} (
-                                {subcategory?.itemCards?.length})
+                                {subcategory?.title} ({subcategory?.itemCards?.length})
                             </AccordionTrigger>
                             <AccordionContent className="px-5 py-4">
                                 {subcategory?.itemCards?.map((item) => (

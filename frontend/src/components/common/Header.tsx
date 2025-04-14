@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import LocationSidebar from "@/components/sidebar/LocationSidebar";
-import AuthSidebar from "@/components/sidebar/AuthSidebar";
+import LocationSidebar from "@/components/header/LocationSidebar";
+import AuthSidebar from "@/components/header/AuthSidebar";
 import UserDetails from "@/components/header/UserDetails";
 import { useAppSelector } from "@/store/hooks";
 
@@ -24,20 +24,16 @@ const Header = () => {
                     {user ? <UserDetails user={user} /> : <AuthSidebar />}
                     <Link
                         to="/checkout"
-                        className="flex items-center gap-2 group orange-hover font-medium"
-                    >
+                        className="flex items-center gap-2 group orange-hover font-medium">
                         <span className="relative overflow-hidden group">
                             <svg
                                 className="stroke-gray-500 fill-white stroke-2 group-hover:stroke-orange-500 transition-all duration-300"
                                 viewBox="-1 0 37 32"
                                 height="20"
-                                width="20"
-                            >
+                                width="20">
                                 <path d="M4.438 0l-2.598 5.11-1.84 26.124h34.909l-1.906-26.124-2.597-5.11z"></path>
                             </svg>
-                            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-bold">
-                                {0}
-                            </span>
+                            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm font-bold">{0}</span>
                         </span>
                         Cart
                     </Link>

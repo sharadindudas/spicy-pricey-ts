@@ -12,12 +12,18 @@ const App = () => {
         <>
             <Header />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={<Home />}
+                />
                 <Route
                     path="/restaurant/menu/:resId"
                     element={<RestaurantMenu />}
                 />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route
+                    path="/checkout"
+                    element={<Checkout />}
+                />
             </Routes>
             <ScrollToTop />
             <Toaster />
@@ -27,3 +33,4 @@ const App = () => {
 };
 
 export default App;
+

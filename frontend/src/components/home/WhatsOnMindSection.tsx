@@ -1,26 +1,18 @@
 import { WhatsOnMindSectionType } from "@/types/types";
 import { WHATSONMIND_IMG_URL } from "@/utils/constants";
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
-const WhatsOnMindSection = ({
-    data: whatsOnMindData
-}: {
+interface WhatsOnMindSectionProps {
     data: WhatsOnMindSectionType[];
-}) => {
+}
+
+const WhatsOnMindSection = ({ data: whatsOnMindData }: WhatsOnMindSectionProps) => {
     return (
         <>
             {whatsOnMindData && whatsOnMindData?.length > 0 && (
                 <>
                     <section className="relative">
-                        <h2 className="text-2xl mb-4 font-bold">
-                            What's on your mind?
-                        </h2>
+                        <h2 className="text-2xl mb-4 font-bold">What's on your mind?</h2>
                         <Carousel>
                             <div className="absolute -top-8 right-10 sm:block hidden">
                                 <CarouselPrevious className="top-0 -left-10 cursor-pointer" />
@@ -30,19 +22,12 @@ const WhatsOnMindSection = ({
                                 {whatsOnMindData?.map((item) => (
                                     <CarouselItem
                                         key={item.id}
-                                        className="basis-auto"
-                                    >
+                                        className="basis-auto">
                                         <div className="cursor-pointer">
                                             <div className="w-36">
                                                 <img
-                                                    src={
-                                                        WHATSONMIND_IMG_URL +
-                                                        item?.imageId
-                                                    }
-                                                    alt={
-                                                        item?.accessibility
-                                                            ?.altText
-                                                    }
+                                                    src={WHATSONMIND_IMG_URL + item?.imageId}
+                                                    alt={item?.accessibility?.altText}
                                                 />
                                             </div>
                                         </div>

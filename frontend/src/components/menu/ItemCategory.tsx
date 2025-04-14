@@ -1,17 +1,15 @@
 import { ItemCategoryType } from "@/types/types";
 import MenuItem from "./MenuItem";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const ItemCategory = ({ data }: { data: ItemCategoryType }) => {
     const { title, itemCards } = data;
     return (
         <div>
-            <Accordion type="single" collapsible defaultValue="accordion-item">
+            <Accordion
+                type="single"
+                collapsible
+                defaultValue="accordion-item">
                 <AccordionItem value="accordion-item">
                     <AccordionTrigger className="bg-white w-full shadow-md p-5 text-lg font-bold cursor-pointer">
                         {title} ({itemCards?.length})

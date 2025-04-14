@@ -22,20 +22,14 @@ const useGetAllRestaurantLocations = () => {
             setIsSearching(true);
             const fetchRestaurantLocations = async () => {
                 try {
-                    const { data } = await axios.get(
-                        PROXY_URL +
-                            `/api/proxy/swiggy/dapi/misc/place-autocomplete?input=${debouncedSearchInput}`
-                    );
+                    const { data } = await axios.get(PROXY_URL + `/api/proxy/swiggy/dapi/misc/place-autocomplete?input=${debouncedSearchInput}`);
                     setLocations(
                         data?.data?.map((item: LocationType) => {
                             return {
                                 place_id: item?.place_id,
                                 structured_formatting: {
-                                    main_text:
-                                        item?.structured_formatting?.main_text,
-                                    secondary_text:
-                                        item?.structured_formatting
-                                            ?.secondary_text
+                                    main_text: item?.structured_formatting?.main_text,
+                                    secondary_text: item?.structured_formatting?.secondary_text
                                 }
                             };
                         })

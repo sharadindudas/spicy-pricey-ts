@@ -14,60 +14,38 @@ interface RestaurantCardIdentifier {
 
 const useGetRestaurants = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [WhatsOnMind, setWhatsOnMind] = useState<
-        [] | WhatsOnMindSectionType[]
-    >([]);
+    const [WhatsOnMind, setWhatsOnMind] = useState<[] | WhatsOnMindSectionType[]>([]);
     const [TopChain, setTopChain] = useState<[] | RestaurantInfoType[]>([]);
-    const [AllRestaurants, setAllRestaurants] = useState<
-        [] | RestaurantInfoType[]
-    >([]);
-    const [FilteredRestaurants, setFilteredRestaurants] = useState<
-        [] | RestaurantInfoType[]
-    >([]);
+    const [AllRestaurants, setAllRestaurants] = useState<[] | RestaurantInfoType[]>([]);
+    const [FilteredRestaurants, setFilteredRestaurants] = useState<[] | RestaurantInfoType[]>([]);
 
     const location = useAppSelector((store) => store.location.location);
 
     const fetchRestaurants = async (lat: number, lng: number) => {
         setIsLoading(true);
         try {
-            const { data } = await axios.get(
-                PROXY_URL +
-                    `/api/proxy/swiggy/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}`
-            );
-            const whatsOnMindSection: WhatsOnMindSectionType[] =
-                data?.data?.cards
-                    ?.find((obj: RestaurantCardIdentifier) =>
-                        obj?.card?.card?.id?.includes("mind")
-                    )
-                    ?.card?.card?.gridElements?.infoWithStyle?.info?.map(
-                        (item: WhatsOnMindSectionType) => ({
-                            id: item?.id,
-                            imageId: item?.imageId,
-                            accessibility: item?.accessibility?.altText
-                        })
-                    );
+            const { data } = await axios.get(PROXY_URL + `/api/proxy/swiggy/dapi/restaurants/list/v5?lat=${lat}&lng=${lng}`);
+            const whatsOnMindSection: WhatsOnMindSectionType[] = data?.data?.cards
+                ?.find((obj: RestaurantCardIdentifier) => obj?.card?.card?.id?.includes("mind"))
+                ?.card?.card?.gridElements?.infoWithStyle?.info?.map((item: WhatsOnMindSectionType) => ({
+                    id: item?.id,
+                    imageId: item?.imageId,
+                    accessibility: item?.accessibility?.altText
+                }));
             setWhatsOnMind(whatsOnMindSection);
 
             const topChainSection = data?.data?.cards
-                ?.find((obj: RestaurantCardIdentifier) =>
-                    obj?.card?.card?.id?.includes("top_brands")
-                )
-                ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map(
-                    (item: { info: RestaurantInfoType }) => ({
-                        ...item?.info
-                    })
-                );
+                ?.find((obj: RestaurantCardIdentifier) => obj?.card?.card?.id?.includes("top_brands"))
+                ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map((item: { info: RestaurantInfoType }) => ({
+                    ...item?.info
+                }));
             setTopChain(topChainSection);
 
             const allRestaurantsSection = data?.data?.cards
-                ?.find((obj: RestaurantCardIdentifier) =>
-                    obj?.card?.card?.id?.includes("restaurant_grid_listing")
-                )
-                ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map(
-                    (item: { info: RestaurantInfoType }) => ({
-                        ...item?.info
-                    })
-                );
+                ?.find((obj: RestaurantCardIdentifier) => obj?.card?.card?.id?.includes("restaurant_grid_listing"))
+                ?.card?.card?.gridElements?.infoWithStyle?.restaurants?.map((item: { info: RestaurantInfoType }) => ({
+                    ...item?.info
+                }));
             setAllRestaurants(allRestaurantsSection);
             setFilteredRestaurants(allRestaurantsSection);
         } catch (err) {

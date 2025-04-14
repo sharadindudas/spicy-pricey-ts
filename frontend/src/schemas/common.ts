@@ -5,17 +5,13 @@ export const emailSchema = yup
     .string()
     .required("Please provide an email address")
     .trim()
-    .test("validate-email", "Please provide a valid email address", (value) =>
-        validator.isEmail(value)
-    );
+    .test("validate-email", "Please provide a valid email address", (value) => validator.isEmail(value));
 
 export const phoneSchema = yup
     .string()
     .required("Please provide a phone number")
     .trim()
-    .test("validate-phone", "Please provide a valid phone number", (value) =>
-        validator.isMobilePhone(value, "any", { strictMode: false })
-    );
+    .test("validate-phone", "Please provide a valid phone number", (value) => validator.isMobilePhone(value, "any", { strictMode: false }));
 
 export const passwordSchema = yup
     .string()
