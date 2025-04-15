@@ -1,9 +1,15 @@
-import { ItemCategoryType } from "@/types/types";
+import { ItemCategoryType, RestaurantMenuInfoType } from "@/types/types";
 import MenuItem from "./MenuItem";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-const ItemCategory = ({ data }: { data: ItemCategoryType }) => {
+interface ItemCategoryProps {
+    data: ItemCategoryType;
+    resInfo: RestaurantMenuInfoType;
+}
+
+const ItemCategory = ({ data, resInfo }: ItemCategoryProps) => {
     const { title, itemCards } = data;
+
     return (
         <div>
             <Accordion
@@ -19,6 +25,7 @@ const ItemCategory = ({ data }: { data: ItemCategoryType }) => {
                             <MenuItem
                                 key={item?.card?.info?.id}
                                 data={item?.card?.info}
+                                resInfo={resInfo}
                             />
                         ))}
                     </AccordionContent>

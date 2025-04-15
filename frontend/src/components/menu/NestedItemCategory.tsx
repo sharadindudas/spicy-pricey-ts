@@ -1,8 +1,13 @@
-import { NestedItemCategoryType } from "@/types/types";
+import { NestedItemCategoryType, RestaurantMenuInfoType } from "@/types/types";
 import MenuItem from "./MenuItem";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-const NestedItemCategory = ({ data }: { data: NestedItemCategoryType }) => {
+interface NestedItemCategoryProps {
+    data: NestedItemCategoryType;
+    resInfo: RestaurantMenuInfoType;
+}
+
+const NestedItemCategory = ({ data, resInfo }: NestedItemCategoryProps) => {
     const { title, categories } = data;
 
     return (
@@ -25,6 +30,7 @@ const NestedItemCategory = ({ data }: { data: NestedItemCategoryType }) => {
                                     <MenuItem
                                         key={item?.card?.info?.id}
                                         data={item?.card?.info}
+                                        resInfo={resInfo}
                                     />
                                 ))}
                             </AccordionContent>

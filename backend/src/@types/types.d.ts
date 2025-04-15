@@ -5,7 +5,7 @@ export interface ApiResponse {
 }
 
 export interface DecodedPayload {
-    _id: string;
+    id: string;
     role: string;
 }
 

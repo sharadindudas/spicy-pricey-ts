@@ -6,10 +6,10 @@ import { AsyncHandler, ErrorHandler } from "../utils/handlers";
 // View profile
 const viewProfile = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     // Get data from request decoded
-    const { _id } = req.decoded as DecodedPayload;
+    const { id } = req.decoded as DecodedPayload;
 
     // Get the user details
-    const loggedInUser = await UserModel.findById(_id).select("-password");
+    const loggedInUser = await UserModel.findById(id).select("-password");
     if (!loggedInUser) {
         throw new ErrorHandler("User does not exists", 404);
     }

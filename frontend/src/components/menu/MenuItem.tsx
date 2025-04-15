@@ -1,8 +1,37 @@
-import { MenuItemType } from "@/types/types";
+import { MenuItemType, RestaurantMenuInfoType } from "@/types/types";
 import { RESTAURANT_MENU_IMG } from "@/utils/constants";
 
-const MenuItem = ({ data }: { data: MenuItemType }) => {
+interface MenuItemProps {
+    data: MenuItemType;
+    resInfo: RestaurantMenuInfoType;
+}
+
+const MenuItem = ({ data, resInfo }: MenuItemProps) => {
     const { name, price, defaultPrice, description, imageId, itemAttribute } = data;
+
+    const onAddToCart = async () => {
+        const cartData = {
+            restaurant: {
+                id: resInfo?.id,
+                lat: Number(resInfo?.latLong?.split(",")[0]),
+                lng: Number(resInfo?.latLong?.split(",")[1]),
+                name: resInfo?.name,
+                city: resInfo?.city,
+                cloudinaryImageId: resInfo?.cloudinaryImageId,
+                areaName: resInfo?.areaName
+            },
+            cartItem: {
+                id: data?.id,
+                name: data?.name,
+                description: data?.description,
+                imageId: data?.imageId,
+                isVeg: data?.itemAttribute?.vegClassifier === "VEG" ? true : false,
+                price: data?.price ? price / 100 : defaultPrice / 100,
+                quantity: 1
+            }
+        };
+        console.log(cartData);
+    };
 
     return (
         <div className="item flex items-start justify-between pb-8">
@@ -31,7 +60,9 @@ const MenuItem = ({ data }: { data: MenuItemType }) => {
                         />
                     </div>
                 )}
-                <button className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-[1] w-24 h-9 shadow-sm shadow-[#60b246] bg-white text-center inline-block rounded text-[#60b246] text-sm font-bold uppercase cursor-pointer">
+                <button
+                    onClick={onAddToCart}
+                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-[1] w-24 h-9 shadow-sm shadow-[#60b246] bg-white text-center inline-block rounded text-[#60b246] text-sm font-bold uppercase cursor-pointer">
                     Add
                 </button>
             </div>

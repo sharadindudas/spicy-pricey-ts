@@ -18,7 +18,10 @@ const RestaurantMenu = () => {
                 <hr className="border-1 border-dashed border-b-[#d3d3d3] my-4"></hr>
 
                 {resInfo?.isOpen ? (
-                    <RestaurantCategory data={resMenu} />
+                    <RestaurantCategory
+                        data={resMenu}
+                        resInfo={resInfo}
+                    />
                 ) : (
                     <h2 className="notopen-message font-bold text-sm">
                         Uh-oh! The outlet is not accepting orders at the moment. We&apos;re working to get them back online

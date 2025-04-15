@@ -32,10 +32,13 @@ export interface RestaurantInfoType {
 
 // Menu page
 export interface RestaurantMenuInfoType {
+    id: string;
     name: string;
     city: string;
     cuisines: [string];
     areaName: string;
+    latLong: string;
+    cloudinaryImageId: string;
     sla: { lastMileTravelString: string; slaString: string };
     avgRating: number;
     totalRatingsString: string;

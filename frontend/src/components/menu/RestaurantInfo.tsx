@@ -3,7 +3,6 @@ import { Link } from "react-router";
 
 const RestaurantInfo = ({ data: resInfo }: { data: RestaurantMenuInfoType }) => {
     const { name, city, cuisines, areaName, sla, avgRating, totalRatingsString } = resInfo;
-
     return (
         <>
             {/* Breadcrumb */}
