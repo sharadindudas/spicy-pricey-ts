@@ -48,3 +48,9 @@ export const AllCartDetailsSchema = yup.object({
     guestId: yup.string().trim().optional()
 });
 export type AllCartDetailsSchemaType = yup.InferType<typeof AllCartDetailsSchema>;
+
+// Merge guest cart schema
+export const MergeGuestCartSchema = yup.object({
+    guestId: yup.string().trim().optional()
+});
+export type MergeGuestCartSchemaType = yup.InferType<typeof MergeGuestCartSchema>;

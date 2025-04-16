@@ -45,7 +45,7 @@ userSchema.methods.validatePassword = async function (password: string) {
 userSchema.methods.generateJWT = function () {
     return jwt.sign(
         {
-            id: this._id,
+            _id: this._id,
             role: this.role
         },
         JWT_SECRET,

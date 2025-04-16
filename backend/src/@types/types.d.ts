@@ -5,14 +5,25 @@ export interface ApiResponse {
 }
 
 export interface DecodedPayload {
-    id: string;
+    _id: string;
     role: string;
+}
+
+export interface User {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: "user" | "admin";
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 declare global {
     namespace Express {
         interface Request {
             decoded: DecodedPayload;
+            user: User;
         }
     }
 }
