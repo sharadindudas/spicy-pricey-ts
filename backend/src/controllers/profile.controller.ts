@@ -1,9 +1,9 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { ApiResponse, User } from "../@types/types";
 import { AsyncHandler } from "../utils/handlers";
 
 // View profile
-const viewProfile = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+const viewProfile = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Get logged in user's data
     const loggedInUser = req.user as User;
 

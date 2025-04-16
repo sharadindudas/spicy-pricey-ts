@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AsyncHandler, ErrorHandler } from "../utils/handlers";
 import { ApiResponse, User } from "../@types/types";
 import {
@@ -23,10 +23,8 @@ const getCartData = async (userId: string | undefined, guestId: string | undefin
     else return null;
 };
 
-// @route POST /api/cart/add
-// @desc Add cart item for logged in user or guest
-// @access public
-const addToCart = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+// Add cart item for logged in user or guest
+const addToCart = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Get data from request body
     const addToCartData = req.body as AddToCartSchemaType;
 
@@ -85,10 +83,8 @@ const addToCart = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     }
 });
 
-// @route PUT /api/cart/update
-// @desc Update cart item quantity in the cart for logged in user or guest
-// @access public
-const updateCartItemQuantity = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+// Update cart item quantity in the cart for logged in user or guest
+const updateCartItemQuantity = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Get data from request body
     const updateCartItemQuantityData = req.body as UpdateCartItemQuantitySchemaType;
 
@@ -137,10 +133,8 @@ const updateCartItemQuantity = AsyncHandler(async (req, res: Response<ApiRespons
     }
 });
 
-// @route DELETE /api/cart/delete
-// @desc Delete cart item for logged in user or guest
-// @access public
-const deleteCartItem = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+// Delete cart item for logged in user or guest
+const deleteCartItem = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Get data from request body
     const deleteCartItemData = req.body as DeleteCartItemSchemaType;
 
@@ -180,10 +174,8 @@ const deleteCartItem = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     }
 });
 
-// @route GET /api/cart/fetch
-// @desc Get logged in user or guest user's cart details
-// @access public
-const allCartDetails = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+// Get logged in user or guest user's cart details
+const allCartDetails = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Get data from request query
     const cartDetailsData = req.query as AllCartDetailsSchemaType;
 
@@ -205,10 +197,8 @@ const allCartDetails = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     }
 });
 
-// @route POST /api/cart/merge
-// @desc Merge guest cart into user cart on login
-// @access public
-const mergeGuestCart = AsyncHandler(async (req, res: Response<ApiResponse>) => {
+// Merge guest cart into user cart on login
+const mergeGuestCart = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Get data from request body
     const mergeGuestCartData = req.body as MergeGuestCartSchemaType;
 
@@ -238,7 +228,7 @@ const mergeGuestCart = AsyncHandler(async (req, res: Response<ApiResponse>) => {
 
                 // If the cart item exists, update the quantity
                 if (cartItemIndex > -1) {
-                    userCart.cartItems[cartItemIndex].quantity += guestCartItem.quantity;
+                    userCart.cartItems[cartItemIndex].quantity += guestCartItem.quantity as number;
                 }
                 // If the cart item doesn't exists, push it
                 else {

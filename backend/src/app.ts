@@ -8,6 +8,7 @@ import { notfoundMiddleware } from "./middlewares/notfound.middleware";
 import authRouter from "./routes/auth.routes";
 import profileRouter from "./routes/profile.routes";
 import cartRouter from "./routes/cart.routes";
+import checkoutRouter from "./routes/checkout.routes";
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use(
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/profile", profileRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/checkout", checkoutRouter);
 
 app.use(errorMiddleware);
 app.use(notfoundMiddleware);

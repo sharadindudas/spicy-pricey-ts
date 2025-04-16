@@ -40,6 +40,7 @@ const cartSchema = new Schema(
         cartItems: [cartItemSchema],
         totalPrice: {
             type: Number,
+            required: true,
             default: 0
         }
     },
