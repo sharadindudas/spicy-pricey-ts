@@ -1,5 +1,6 @@
 import * as yup from "yup";
 
+// Add to cart schema
 export const AddToCartSchema = yup.object({
     userId: yup.string().trim().optional(),
     guestId: yup.string().trim().optional(),
@@ -19,7 +20,31 @@ export const AddToCartSchema = yup.object({
         imageId: yup.string().trim().required("Please provide the item image Id"),
         isVeg: yup.boolean().required("Please provide the item type"),
         price: yup.number().positive().required("Please provide the item price"),
-        quantity: yup.number().positive().default(1).required("Please provide the item quantity")
+        quantity: yup.number().required("Please provide the item quantity")
     })
 });
 export type AddToCartSchemaType = yup.InferType<typeof AddToCartSchema>;
+
+// Update cart item quantity schema
+export const UpdateCartItemQuantitySchema = yup.object({
+    userId: yup.string().trim().optional(),
+    guestId: yup.string().trim().optional(),
+    cartItemId: yup.string().trim().required("Please provide the item id"),
+    quantity: yup.number().required("Please provide the item quantity")
+});
+export type UpdateCartItemQuantitySchemaType = yup.InferType<typeof UpdateCartItemQuantitySchema>;
+
+// Delete cart item schema
+export const DeleteCartItemSchema = yup.object({
+    userId: yup.string().trim().optional(),
+    guestId: yup.string().trim().optional(),
+    cartItemId: yup.string().trim().required("Please provide the item id")
+});
+export type DeleteCartItemSchemaType = yup.InferType<typeof DeleteCartItemSchema>;
+
+// Get cart details schema
+export const AllCartDetailsSchema = yup.object({
+    userId: yup.string().trim().optional(),
+    guestId: yup.string().trim().optional()
+});
+export type AllCartDetailsSchemaType = yup.InferType<typeof AllCartDetailsSchema>;

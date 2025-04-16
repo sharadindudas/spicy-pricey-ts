@@ -1,19 +1,16 @@
 import { AsyncHandler, ErrorHandler } from "../utils/handlers";
 import { UserModel } from "../models/user.model";
-import { LoginSchema, SignupSchema } from "../schemas/auth.schema";
+import { LoginSchema, LoginSchemaType, SignupSchema, SignupSchemaType } from "../schemas/auth.schema";
 import { RequestHandler, Response } from "express";
 import { ApiResponse } from "../@types/types";
 
 // Signup
 const signup = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     // Get data from request body
-    const signupData = req.body;
+    const signupData = req.body as SignupSchemaType;
 
     // Validation of data
-    const validatedData = await SignupSchema.validate(signupData, { abortEarly: false, stripUnknown: true });
-
-    // Get the validated data
-    const { name, email, phone, password } = validatedData;
+    const { name, email, phone, password } = await SignupSchema.validate(signupData, { abortEarly: false, stripUnknown: true });
 
     // Check if the user already exists in the db or not
     const userExists = await UserModel.findOne({
@@ -45,13 +42,10 @@ const signup = AsyncHandler(async (req, res: Response<ApiResponse>) => {
 // Login
 const login = AsyncHandler(async (req, res: Response<ApiResponse>) => {
     // Get data from request body
-    const loginData = req.body;
+    const loginData = req.body as LoginSchemaType;
 
     // Validation of data
-    const validatedData = await LoginSchema.validate(loginData, { abortEarly: false, stripUnknown: true });
-
-    // Get the validated data
-    const { identity, password } = validatedData;
+    const { identity, password } = await LoginSchema.validate(loginData, { abortEarly: false, stripUnknown: true });
 
     // Check if the user exists in the db or not
     const userExists = await UserModel.findOne({
