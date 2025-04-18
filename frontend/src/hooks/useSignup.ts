@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { SignupSchemaType } from "@/schemas/authSchema";
-import { ApiResponse, setStateBooleanType } from "@/types/types";
+import { ApiResponse } from "@/types/types";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { UseFormReset } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
-const useSignup = (reset: UseFormReset<SignupSchemaType>, setIsLoginForm: setStateBooleanType) => {
+const useSignup = (reset: UseFormReset<SignupSchemaType>) => {
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSignup = async (data: SignupSchemaType) => {
         setIsLoading(true);
@@ -17,7 +19,7 @@ const useSignup = (reset: UseFormReset<SignupSchemaType>, setIsLoginForm: setSta
             if (response.data.success) {
                 toast.success(response.data.message || "Registered successfully");
                 reset();
-                setIsLoginForm(true);
+                navigate("/login");
             }
         } catch (err) {
             if (err instanceof AxiosError) {

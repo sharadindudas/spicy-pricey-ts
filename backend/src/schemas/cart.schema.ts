@@ -15,10 +15,10 @@ export const AddToCartSchema = yup.object({
     }),
     cartItem: yup.object({
         id: yup.string().trim().required("Please provide the item id"),
-        name: yup.string().trim().required("Please provide the item name"),
-        description: yup.string().trim().required("Please provide the item description"),
-        imageId: yup.string().trim().required("Please provide the item image Id"),
-        isVeg: yup.boolean().required("Please provide the item type"),
+        name: yup.string().trim(),
+        description: yup.string().trim(),
+        imageId: yup.string().trim(),
+        isVeg: yup.boolean(),
         price: yup.number().positive().required("Please provide the item price"),
         quantity: yup.number().required("Please provide the item quantity")
     })
@@ -50,7 +50,7 @@ export const AllCartDetailsSchema = yup.object({
 export type AllCartDetailsSchemaType = yup.InferType<typeof AllCartDetailsSchema>;
 
 // Merge guest cart schema
-export const MergeGuestCartSchema = yup.object({
+export const MergeCartSchema = yup.object({
     guestId: yup.string().trim().optional()
 });
-export type MergeGuestCartSchemaType = yup.InferType<typeof MergeGuestCartSchema>;
+export type MergeCartSchemaType = yup.InferType<typeof MergeCartSchema>;

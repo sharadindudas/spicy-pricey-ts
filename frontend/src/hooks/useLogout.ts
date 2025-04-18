@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/store/hooks";
+import { removeCart } from "@/store/slices/cartSlice";
 import { removeLocation } from "@/store/slices/locationSlice";
 import { removeUser } from "@/store/slices/userSlice";
 import { ApiResponse } from "@/types/types";
@@ -16,6 +17,7 @@ const useLogout = () => {
             if (response.data.success) {
                 dispatch(removeUser());
                 dispatch(removeLocation());
+                dispatch(removeCart());
                 toast.success(response.data.message || "Logged out successfully");
             }
         } catch (err) {

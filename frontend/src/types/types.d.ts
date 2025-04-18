@@ -103,3 +103,55 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface CartItem {
+    id: string;
+    name: string;
+    description: string;
+    imageId: string;
+    isVeg: boolean;
+    price: number;
+    quantity: number;
+}
+
+export interface Cart {
+    _id: string;
+    userId?: string;
+    guestId: string;
+    restaurant: {
+        id: string;
+        lat: number;
+        lng: number;
+        name: string;
+        city: string;
+        cloudinaryImageId: string;
+        areaName: string;
+    };
+    cartItems: CartItem[];
+    totalPrice: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface AddToCart {
+    userId?: string;
+    guestId?: string;
+    restaurant: {
+        id: string;
+        lat: number;
+        lng: number;
+        name: string;
+        city: string;
+        cloudinaryImageId: string;
+        areaName: string;
+    };
+    cartItem: {
+        id: string;
+        name: string;
+        description: string;
+        imageId: string;
+        isVeg: boolean;
+        price: number;
+        quantity: number;
+    };
+}

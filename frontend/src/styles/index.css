@@ -119,12 +119,28 @@
     }
 }
 
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
 @theme {
     --font-inter: "Inter", sans-serif;
 }
 
 html {
     @apply font-inter;
+}
+
+#root {
+    flex-direction: column;
+    min-height: 100vh;
+    display: flex;
 }
 
 .orange-hover {

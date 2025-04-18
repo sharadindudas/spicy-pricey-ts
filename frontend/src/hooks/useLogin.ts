@@ -1,14 +1,14 @@
 import { LoginSchemaType } from "@/schemas/authSchema";
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/userSlice";
-import { ApiResponse, setStateBooleanType, User } from "@/types/types";
+import { ApiResponse, User } from "@/types/types";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { UseFormReset } from "react-hook-form";
 import toast from "react-hot-toast";
 
-const useLogin = (reset: UseFormReset<LoginSchemaType>, setIsSidebarOpen: setStateBooleanType) => {
+const useLogin = (reset: UseFormReset<LoginSchemaType>) => {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useAppDispatch();
 
@@ -21,7 +21,6 @@ const useLogin = (reset: UseFormReset<LoginSchemaType>, setIsSidebarOpen: setSta
                 toast.success(response.data.message || "Logged in successfully");
                 dispatch(setUser(response.data.data as User));
                 reset();
-                setIsSidebarOpen(false);
             }
         } catch (err) {
             if (err instanceof AxiosError) {

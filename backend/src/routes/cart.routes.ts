@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { addToCart, updateCartItemQuantity, deleteCartItem, allCartDetails, mergeGuestCart } from "../controllers/cart.controller";
+import { addToCart, cartDetails, deleteItemFromCart, mergeCartDetails, updateCartItemQuantity } from "../controllers/cart.controller";
 import { userAuth } from "../middlewares/auth.middleware";
 
 const cartRouter = Router();
 cartRouter.post("/add", addToCart);
+cartRouter.delete("/remove", deleteItemFromCart);
 cartRouter.put("/update", updateCartItemQuantity);
-cartRouter.delete("/delete", deleteCartItem);
-cartRouter.get("/fetch", allCartDetails);
-cartRouter.post("/merge", userAuth, mergeGuestCart);
+cartRouter.get("/fetch", cartDetails);
+cartRouter.post("/merge", userAuth, mergeCartDetails);
 
 export default cartRouter;

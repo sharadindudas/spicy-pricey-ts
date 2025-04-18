@@ -6,6 +6,8 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import RestaurantMenu from "@/pages/RestaurantMenu";
 import Checkout from "@/pages/Checkout";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 
 const App = () => {
     return (
@@ -15,6 +17,14 @@ const App = () => {
                 <Route
                     path="/"
                     element={<Home />}
+                />
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+                <Route
+                    path="/signup"
+                    element={<Signup />}
                 />
                 <Route
                     path="/restaurant/menu/:resId"

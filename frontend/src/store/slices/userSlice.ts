@@ -1,9 +1,6 @@
 import { User } from "@/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Retrieve user info and token from localStorage if available
-const userFromStorage = localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo") as string) : null;
-
 // Check for an existing guest Id in localStorage or generate a new one
 const initialGuestId = localStorage.getItem("guestId") || `guest_${new Date().getTime()}`;
 localStorage.setItem("guestId", initialGuestId);
@@ -14,7 +11,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-    user: userFromStorage,
+    user: JSON.parse(localStorage.getItem("userInfo") as string) || null,
     guestId: initialGuestId
 };
 

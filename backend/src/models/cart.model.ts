@@ -2,15 +2,29 @@ import { Schema, model } from "mongoose";
 
 const cartItemSchema = new Schema(
     {
-        id: String,
-        name: String,
-        description: String,
-        imageId: String,
-        isVeg: Boolean,
-        price: Number,
+        id: {
+            type: String,
+            required: true
+        },
+        name: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        imageId: {
+            type: String
+        },
+        isVeg: {
+            type: Boolean
+        },
+        price: {
+            type: Number,
+            required: true
+        },
         quantity: {
             type: Number,
-            default: 1
+            required: true
         }
     },
     { _id: false, versionKey: false }
@@ -18,13 +32,34 @@ const cartItemSchema = new Schema(
 
 const restaurantSchema = new Schema(
     {
-        id: String,
-        lat: Number,
-        lng: Number,
-        name: String,
-        city: String,
-        cloudinaryImageId: String,
-        areaName: String
+        id: {
+            type: String,
+            required: true
+        },
+        lat: {
+            type: Number,
+            required: true
+        },
+        lng: {
+            type: Number,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        cloudinaryImageId: {
+            type: String,
+            required: true
+        },
+        areaName: {
+            type: String,
+            required: true
+        }
     },
     { _id: false, versionKey: false }
 );

@@ -18,7 +18,7 @@ app.use(
     cors({
         origin: FRONTEND_URL,
         credentials: true,
-        methods: ["GET", "POST", "PATCH", "PUT", "OPTIONS"]
+        methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"]
     })
 );
 

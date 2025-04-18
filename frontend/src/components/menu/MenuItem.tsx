@@ -1,5 +1,11 @@
-import { MenuItemType, RestaurantMenuInfoType } from "@/types/types";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addToCart } from "@/store/slices/cartSlice";
+import { AddToCart, ApiResponse, MenuItemType, RestaurantMenuInfoType } from "@/types/types";
+import { AxiosError } from "axios";
+import { axiosInstance } from "@/utils/axiosInstance";
 import { RESTAURANT_MENU_IMG } from "@/utils/constants";
+import toast from "react-hot-toast";
 
 interface MenuItemProps {
     data: MenuItemType;
@@ -7,10 +13,17 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ data, resInfo }: MenuItemProps) => {
+    const [isLoading, setIsLoading] = useState(false);
     const { name, price, defaultPrice, description, imageId, itemAttribute } = data;
+    const { user, guestId } = useAppSelector((store) => store.user);
+    const dispatch = useAppDispatch();
 
-    const onAddToCart = async () => {
-        const cartData = {
+    const handleAddToCart = async () => {
+        setIsLoading(true);
+        const toastId = toast.loading("Loading...");
+        const addToCartData: AddToCart = {
+            userId: user?._id,
+            guestId,
             restaurant: {
                 id: resInfo?.id,
                 lat: Number(resInfo?.latLong?.split(",")[0]),
@@ -30,7 +43,20 @@ const MenuItem = ({ data, resInfo }: MenuItemProps) => {
                 quantity: 1
             }
         };
-        console.log(cartData);
+        try {
+            const response = await axiosInstance.post<ApiResponse>("/cart/add", addToCartData);
+            if (response.data.success) {
+                dispatch(addToCart(response.data.data));
+                toast.success(response.data.message || "Item added to cart");
+            }
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                toast.error(err.response?.data.message);
+            }
+        } finally {
+            setIsLoading(false);
+            toast.dismiss(toastId);
+        }
     };
 
     return (
@@ -61,9 +87,9 @@ const MenuItem = ({ data, resInfo }: MenuItemProps) => {
                     </div>
                 )}
                 <button
-                    onClick={onAddToCart}
-                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-[1] w-24 h-9 shadow-sm shadow-[#60b246] bg-white text-center inline-block rounded text-[#60b246] text-sm font-bold uppercase cursor-pointer">
-                    Add
+                    onClick={handleAddToCart}
+                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 z-[1] w-24 h-9 shadow-sm shadow-[#60b246] bg-white text-center inline-block rounded text-[#60b246] text-sm font-bold uppercase cursor-pointer mx-auto">
+                    {isLoading ? "Adding..." : "Add"}
                 </button>
             </div>
         </div>
