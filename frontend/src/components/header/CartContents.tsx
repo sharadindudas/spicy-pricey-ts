@@ -31,7 +31,6 @@ const CartContents = ({ cart, userId, guestId }: CartContentsProps) => {
                 dispatch(addToCart(response.data.data));
                 toast.success(response.data.message || "Deleted item from cart");
             }
-            console.log(response.data);
         } catch (err) {
             if (err instanceof AxiosError) {
                 toast.error(err.response?.data.message || "Failed to delete item");
@@ -41,8 +40,6 @@ const CartContents = ({ cart, userId, guestId }: CartContentsProps) => {
 
     const handleUpdateItemQuantity = async (id: string, delta: number, quantity: number) => {
         const newQuantity = quantity + delta;
-        console.log(newQuantity);
-
         try {
             const response = await axiosInstance.put<ApiResponse>("/cart/update", { userId, guestId, cartItemId: id, quantity: newQuantity });
             if (response.data.success) {

@@ -1,82 +1,98 @@
 import { Request, Response } from "express";
 import { AsyncHandler, ErrorHandler } from "../utils/handlers";
 import { ApiResponse } from "../@types/types";
+import { CartModel } from "../models/cart.model";
 import {
     AddToCartSchema,
     AddToCartSchemaType,
-    AllCartDetailsSchema,
-    AllCartDetailsSchemaType,
-    DeleteCartItemSchema,
-    DeleteCartItemSchemaType,
-    MergeCartSchema,
-    MergeCartSchemaType,
-    UpdateCartItemQuantitySchema,
-    UpdateCartItemQuantitySchemaType
+    CartDetailsSchema,
+    CartDetailsSchemaType,
+    CartItemSchemaType,
+    RemoveCartItemSchema,
+    RemoveCartItemSchemaType,
+    MergeGuestCartSchema,
+    MergeGuestCartSchemaType,
+    UpdateItemQuantitySchema,
+    UpdateItemQuantitySchemaType
 } from "../schemas/cart.schema";
-import { CartModel } from "../models/cart.model";
 
-// Helper function to get the cart data of logged in user or guest
-const getCartDetails = async (userId: string | undefined, guestId: string | undefined) => {
+/**
+ * CartController - Handles all cart-related operations
+ *
+ * This module contains functions to manage shopping cart operations including:
+ * - Adding items to cart
+ * - Removing items from cart
+ * - Updating item quantities
+ * - Retrieving cart information
+ * - Merging guest cart with user cart
+ */
+
+// Retrieves cart details for either a logged-in user or guest user
+const fetchCartByUserIdentifier = async (userId?: string, guestId?: string) => {
     if (userId) return await CartModel.findOne({ user: userId });
-    else if (guestId) return await CartModel.findOne({ guestId });
-    else return null;
+    if (guestId) return await CartModel.findOne({ guestId });
+    return null;
 };
 
-// Add cart item for logged in user or guest user
+// Recalculates the total price of items in a cart
+const calculateTotalPrice = (cartItems: CartItemSchemaType[]) => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+};
+
+/**
+ * Adds an item to the user's or guest's cart
+ * Creates a new cart if one doesn't exist
+ */
 const addToCart = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
-    // Get data from request body
-    const addToCartData = req.body as AddToCartSchemaType;
-
     // Validation of data
-    const { userId, guestId, restaurant, cartItem } = await AddToCartSchema.validate(addToCartData, { abortEarly: false, stripUnknown: true });
+    const { userId, guestId, restaurant, cartItem } = await AddToCartSchema.validate(req.body as AddToCartSchemaType, {
+        abortEarly: false,
+        stripUnknown: true
+    });
 
-    // Get the cart data from logged in user or guest user
-    const cart = await getCartDetails(userId, guestId);
+    // Check if the cart exists in the db or not
+    const existingCart = await fetchCartByUserIdentifier(userId, guestId);
 
-    // If the cart data exists, update it
-    if (cart) {
-        // Check if the cart item is from same restaurant or not
-        if (cart.restaurant) {
-            if (cart.restaurant.id !== restaurant.id) {
-                throw new ErrorHandler("Your cart contains items from other restaurant. Please reset your cart", 409);
-            }
+    // If the cart exists, update it
+    if (existingCart) {
+        // Verify the restaurant
+        if (existingCart.restaurant && existingCart.restaurant.id !== restaurant.id) {
+            throw new ErrorHandler("Your cart contains items from another restaurant", 409);
         }
 
         // Find the cart item
-        const cartItemIndex = cart.cartItems.findIndex((item) => item.id === cartItem.id);
+        const cartItemIndex = existingCart.cartItems.findIndex((item) => item.id === cartItem.id);
 
-        // If the cart item does not exists, add it
-        if (cartItemIndex === -1) {
-            cart.cartItems.push(cartItem);
+        // If cart item exists, update quantity
+        if (cartItemIndex > -1) {
+            existingCart.cartItems[cartItemIndex].quantity += cartItem.quantity;
         }
-        // If the cart item exists, update the quantity
+        // If cart item doesn't exists, add it to cart
         else {
-            cart.cartItems[cartItemIndex].quantity += cartItem.quantity;
+            existingCart.cartItems.push(cartItem);
         }
 
-        // Add the restaurant info to the cart
-        cart.restaurant = restaurant;
+        // Update restaurant info and recalculate total price
+        existingCart.restaurant = restaurant;
+        existingCart.totalPrice = calculateTotalPrice(existingCart.cartItems as CartItemSchemaType[]);
 
-        // Recalculate the total price
-        cart.totalPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-        // Save the cart details
-        await cart.save();
+        // Save the cart data
+        await existingCart.save();
 
         // Return the response
         res.status(200).json({
             success: true,
             message: "Item added to cart",
-            data: cart
+            data: existingCart
         });
     }
 
-    // If the cart data doesn't exists, create it
+    // If the cart doesn't exists, create it
     else {
-        // Create a new cart
+        const generatedGuestId = guestId || `guest_${Date.now()}`;
         const newCart = await CartModel.create({
-            userId: userId ? userId : undefined,
-            guestId: guestId ? guestId : "guest_" + new Date().getTime(),
+            user: userId || undefined,
+            guestId: userId ? undefined : generatedGuestId,
             restaurant,
             cartItems: [cartItem],
             totalPrice: cartItem.price * cartItem.quantity
@@ -91,39 +107,42 @@ const addToCart = AsyncHandler(async (req: Request, res: Response<ApiResponse>) 
     }
 });
 
-// Delete cart item from cart
-const deleteItemFromCart = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
-    // Get data from request body
-    const deleteCartData = req.body as DeleteCartItemSchemaType;
-
+/**
+ * Removes a specific item from the cart
+ * Updates cart state or clears restaurant if cart becomes empty
+ */
+const removeCartItem = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Validation of data
-    const { userId, guestId, cartItemId } = await DeleteCartItemSchema.validate(deleteCartData, { abortEarly: false, stripUnknown: true });
+    const { userId, guestId, cartItemId } = await RemoveCartItemSchema.validate(req.body as RemoveCartItemSchemaType, {
+        abortEarly: false,
+        stripUnknown: true
+    });
 
-    // Get the cart data from logged in user or guest user
-    const cart = await getCartDetails(userId, guestId);
+    // Get the cart details from logged-in user or guest user
+    const cart = await fetchCartByUserIdentifier(userId, guestId);
 
     // Check if the cart exists in the db or not
     if (!cart) {
         throw new ErrorHandler("Cart not found", 404);
     }
 
-    // Find the cart item
+    // Check if the cart item exists in the cart or not
     const cartItemIndex = cart.cartItems.findIndex((item) => item.id === cartItemId);
     if (cartItemIndex === -1) {
         throw new ErrorHandler("Item not found in cart", 404);
     }
 
-    // Remove the cart item from the cart
+    // Remove the item from cart
     cart.cartItems.splice(cartItemIndex, 1);
 
-    // Check if the cart item is the last item in the cart or not
+    // Check if the cart items are empty or not
     if (cart.cartItems.length === 0) {
-        // Remove restaurant info and reset total price
+        // Reset cart
         cart.restaurant = undefined;
         cart.totalPrice = 0;
     } else {
-        // Calculate the total price
-        cart.totalPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        // Recalculate the total price
+        cart.totalPrice = calculateTotalPrice(cart.cartItems as CartItemSchemaType[]);
     }
 
     // Save the cart data
@@ -137,51 +156,49 @@ const deleteItemFromCart = AsyncHandler(async (req: Request, res: Response<ApiRe
     });
 });
 
-// Update cart item quantity for logged in user or guest user
-const updateCartItemQuantity = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
-    // Get data from request body
-    const updateCartData = req.body as UpdateCartItemQuantitySchemaType;
-
+/**
+ * Updates the quantity of an item in the cart
+ * Removes item if quantity is set to zero
+ */
+const updateItemQuantity = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Validation of data
-    const { userId, guestId, cartItemId, quantity } = await UpdateCartItemQuantitySchema.validate(updateCartData, {
+    const { userId, guestId, cartItemId, quantity } = await UpdateItemQuantitySchema.validate(req.body as UpdateItemQuantitySchemaType, {
         abortEarly: false,
         stripUnknown: true
     });
 
-    // Get the cart data from logged in user or guest user
-    const cart = await getCartDetails(userId, guestId);
+    // Get the cart data from logged-in user or guest user
+    const cart = await fetchCartByUserIdentifier(userId, guestId);
 
     // Check if the cart exists in the db or not
     if (!cart) {
         throw new ErrorHandler("Cart not found", 404);
     }
 
-    // Find the cart item
+    // Check if the cart item exists in the cart or not
     const cartItemIndex = cart.cartItems.findIndex((item) => item.id === cartItemId);
-
-    // If the cart item doesn't exists
     if (cartItemIndex === -1) {
         throw new ErrorHandler("Item not found in cart", 404);
     }
 
-    // Update the cart item quantity
+    // Handle quantity update
     if (quantity > 0) {
+        // Increase the quantity
         cart.cartItems[cartItemIndex].quantity = quantity;
     } else {
-        // Remove the item if quantity is 0
+        // Decrease the quantity
         cart.cartItems.splice(cartItemIndex, 1);
 
-        // Check if the cart item is the last item in the cart or not
+        // Check if the cart is empty or not
         if (cart.cartItems.length === 0) {
-            // Remove restaurant info and reset total price
             cart.restaurant = undefined;
             cart.totalPrice = 0;
         }
     }
 
-    // Calculate the total price if there are items in cart
+    // Recalculate the total price
     if (cart.cartItems.length > 0) {
-        cart.totalPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        cart.totalPrice = calculateTotalPrice(cart.cartItems as CartItemSchemaType[]);
     }
 
     // Save the cart data
@@ -190,107 +207,109 @@ const updateCartItemQuantity = AsyncHandler(async (req: Request, res: Response<A
     // Return the response
     res.status(200).json({
         success: true,
-        message: "Updated cart successfully",
+        message: "Cart updated successfully",
         data: cart
     });
 });
 
-// Get logged in user or guest user cart details
-const cartDetails = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
-    // Get data from request query
-    const allCartData = req.query as AllCartDetailsSchemaType;
-
+/**
+ * Retrieves the current cart details for a user or guest
+ */
+const getCartDetails = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
     // Validation of data
-    const { userId, guestId } = await AllCartDetailsSchema.validate(allCartData, { abortEarly: false, stripUnknown: true });
+    const { userId, guestId } = await CartDetailsSchema.validate(req.query as CartDetailsSchemaType, { abortEarly: false, stripUnknown: true });
 
-    // Get the cart data from logged in user or guest user
-    const cart = await getCartDetails(userId, guestId);
+    // Get the cart data from logged-in user or guest user
+    const cart = await fetchCartByUserIdentifier(userId, guestId);
 
     // Check if the cart exists in the db or not
     if (!cart) {
         throw new ErrorHandler("Cart not found", 404);
-    } else {
-        // Return the response
-        res.status(200).json({
-            success: true,
-            message: "Fetched cart successfully",
-            data: cart
-        });
     }
+
+    // Return the response
+    res.status(200).json({
+        success: true,
+        message: "Fetched cart successfully",
+        data: cart
+    });
 });
 
-// Merge guest user's cart into user's cart on login
-const mergeCartDetails = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
-    // Get data from request body
-    const mergeCartData = req.body as MergeCartSchemaType;
-
-    // Get logged in user's id from auth middleware
+/**
+ * Merges a guest user's cart into a logged-in user's cart
+ * Handles restaurant conflicts and preserves items when possible
+ */
+const mergeGuestCart = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => {
+    // Get logged in user's id
     const { _id: userId } = req.user;
 
     // Validation of data
-    const { guestId } = await MergeCartSchema.validate(mergeCartData, { abortEarly: false, stripUnknown: true });
+    const { guestId } = await MergeGuestCartSchema.validate(req.body as MergeGuestCartSchemaType, { abortEarly: false, stripUnknown: true });
 
-    // Find the guest cart and user cart
-    const guestCart = await CartModel.findOne({ guestId });
+    // Get the cart data of both user and guest
     const userCart = await CartModel.findOne({ user: userId });
+    const guestCart = await CartModel.findOne({ guestId });
 
-    // Check if the guest cart exists in the db or not
+    // If the guest cart exists
     if (guestCart) {
-        // Check if the cart items is empty or not
+        // Check if the guest cart is empty or not
         if (guestCart.cartItems.length === 0) {
             throw new ErrorHandler("Guest cart is empty", 400);
         }
 
         // If the user cart exists
         if (userCart) {
-            // Check if the restaurant is same on both user cart and guest cart
+            // Verify the restaurant
             if (userCart.cartItems.length > 0 && guestCart.restaurant?.id !== userCart.restaurant?.id) {
-                // Carts have items from different restaurants - handle the conflict
+                // Replace the user cart with guest cart
                 userCart.restaurant = guestCart.restaurant;
                 userCart.cartItems = guestCart.cartItems;
                 userCart.totalPrice = guestCart.totalPrice;
             }
 
-            // If user cart is empty, adopt the guest cart's restaurant
+            // Set the restaurant if user cart is empty
             if (userCart.cartItems.length === 0) {
                 userCart.restaurant = guestCart.restaurant;
             }
 
-            // Merge the guest cart into user cart
+            // Merge the cart items from guest cart into user cart
             guestCart.cartItems.forEach((guestItem) => {
-                // Find the cart item from the user cart
-                const cartItemIndex = userCart.cartItems.findIndex((item) => item.id === guestItem.id);
+                // Find the cart item inside user cart
+                const existingItemIndex = userCart.cartItems.findIndex((item) => item.id === guestItem.id);
 
-                // If the cart item doesn't exists in the guest cart, add it to user cart
-                if (cartItemIndex === -1) {
+                // If the cart item doesn't exists, add it
+                if (existingItemIndex === -1) {
                     userCart.cartItems.push(guestItem);
                 }
-                // If the cart item exists in the guest cart, update the quantity
+                // If the cart item exists, update the quantity
                 else {
-                    userCart.cartItems[cartItemIndex].quantity = guestItem.quantity;
+                    userCart.cartItems[existingItemIndex].quantity = guestItem.quantity;
                 }
             });
 
-            // Calculate the total price
-            userCart.totalPrice = userCart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            // Recalculate the total price
+            userCart.totalPrice = calculateTotalPrice(userCart.cartItems as CartItemSchemaType[]);
 
             // Save the cart data
             await userCart.save();
 
-            // Remove the guest cart after merging
+            // Remove the guest cart
             await CartModel.findOneAndDelete({ guestId });
 
             // Return the response
             res.status(200).json({
                 success: true,
-                message: "Merged cart successfully",
+                message: "Guest cart merged successfully",
                 data: userCart
             });
         }
 
-        // If user cart doesn't exists
+        // If the user cart doesn't exists
         else {
-            // Create a new user cart using guest cart
+            // Remove the guest cart
+            await CartModel.findOneAndDelete({ guestId });
+
+            // Create a new user cart
             const newUserCart = await CartModel.create({
                 user: userId,
                 restaurant: guestCart.restaurant,
@@ -298,29 +317,23 @@ const mergeCartDetails = AsyncHandler(async (req: Request, res: Response<ApiResp
                 totalPrice: guestCart.totalPrice
             });
 
-            // Remove the guest cart after creating new user cart
-            await CartModel.findOneAndDelete({ guestId });
-
             // Return the response
             res.status(200).json({
                 success: true,
-                message: "Created user cart successfully",
+                message: "Guest cart converted to user cart",
                 data: newUserCart
             });
         }
-    } else {
-        // Guest cart has already been merged, return the user cart
-        if (userCart) {
-            res.status(200).json({
-                success: true,
-                message: "Fetched cart successfully",
-                data: userCart
-            });
-        } else {
-            // If the guest cart doesn't exists
-            throw new ErrorHandler("Guest cart not found", 404);
-        }
+    }
+
+    // If the guest cart doesn't exists
+    else {
+        res.status(200).json({
+            success: true,
+            message: "Using existing user cart",
+            data: userCart
+        });
     }
 });
 
-export { addToCart, deleteItemFromCart, updateCartItemQuantity, cartDetails, mergeCartDetails };
+export { addToCart, removeCartItem, updateItemQuantity, getCartDetails, mergeGuestCart };
