@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginSchema, LoginSchemaType } from "@/schemas/authSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,14 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ToolTipMessage from "@/components/common/ToolTipMessage";
 import { LoaderCircle, Eye, EyeOff } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Checkbox } from "@/components/ui/checkbox";
-import { axiosInstance } from "@/utils/axiosInstance";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ApiResponse } from "@/types/types";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
-import { addToCart } from "@/store/slices/cartSlice";
+import { useAppSelector } from "@/store/hooks";
 
 const Login = () => {
     const {
@@ -28,64 +23,10 @@ const Login = () => {
     });
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const { isLoading, handleLogin } = useLogin(reset);
-
-    const navigate = useNavigate();
-    const location = useLocation();
-    const dispatch = useAppDispatch();
-
-    const { user, guestId } = useAppSelector((store) => store.user);
-    const { cart } = useAppSelector((store) => store.cart);
-
-    const redirect = new URLSearchParams(location.search).get("redirect") || "/";
-    const isCheckoutRedirect = redirect.includes("checkout");
-
-    useEffect(() => {
-        const handleMergeCart = async () => {
-            try {
-                const response = await axiosInstance.post<ApiResponse>("/cart/merge", { userId: user?._id, guestId });
-                if (response.data.success) {
-                    dispatch(addToCart(response.data.data));
-                    navigate(isCheckoutRedirect ? "/checkout" : "/");
-                }
-            } catch (err) {
-                if (err instanceof AxiosError) {
-                    toast.error(err.response?.data.message || "Failed to merge cart");
-                }
-            }
-        };
-        const checkoutRedirection = async () => {
-            if (user) {
-                if (cart && cart?.cartItems.length > 0 && guestId) {
-                    await handleMergeCart();
-                } else {
-                    navigate(isCheckoutRedirect ? "/checkout" : "/");
-                }
-            }
-        };
-        checkoutRedirection();
-    }, [cart, guestId, isCheckoutRedirect, navigate, user, dispatch]);
-
-    const fetchCart = async () => {
-        try {
-            const response = await axiosInstance.get<ApiResponse>("/cart/fetch", {
-                params: {
-                    userId: user?._id,
-                    guestId
-                }
-            });
-            if (response.data.success) {
-                dispatch(addToCart(response.data.data));
-            }
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                console.error(err.response?.data.message);
-            }
-        }
-    };
+    const { guestId } = useAppSelector((store) => store.user);
 
     const onLogin = async (data: LoginSchemaType) => {
-        await handleLogin(data);
-        await fetchCart();
+        await handleLogin(data, guestId);
     };
 
     return (
@@ -121,7 +62,10 @@ const Login = () => {
                     </div>
                     <div className="flex justify-between items-center text-sm mb-5">
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="terms" />
+                            <Checkbox
+                                id="terms"
+                                defaultChecked
+                            />
                             <label
                                 htmlFor="terms"
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">

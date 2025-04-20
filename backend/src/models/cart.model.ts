@@ -73,6 +73,10 @@ const cartSchema = new Schema(
         guestId: String,
         restaurant: restaurantSchema,
         cartItems: [cartItemSchema],
+        cartItemsCount: {
+            type: Number,
+            required: true
+        },
         totalPrice: {
             type: Number,
             required: true,

@@ -17,12 +17,12 @@ const locationSlice = createSlice({
             state.location = action.payload;
             localStorage.setItem("locationInfo", JSON.stringify(state.location));
         },
-        removeLocation: (state) => {
+        clearLocation: (state) => {
             state.location = null;
             localStorage.removeItem("locationInfo");
         }
     }
 });
 
-export const { setLocation, removeLocation } = locationSlice.actions;
+export const { setLocation, clearLocation } = locationSlice.actions;
 export default locationSlice.reducer;

@@ -107,8 +107,8 @@ export interface User {
 export interface CartItem {
     id: string;
     name: string;
-    description: string;
-    imageId: string;
+    description?: string;
+    imageId?: string;
     isVeg: boolean;
     price: number;
     quantity: number;
@@ -117,7 +117,7 @@ export interface CartItem {
 export interface Cart {
     _id: string;
     userId?: string;
-    guestId: string;
+    guestId?: string;
     restaurant: {
         id: string;
         lat: number;

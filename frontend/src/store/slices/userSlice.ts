@@ -23,11 +23,11 @@ const userSlice = createSlice({
             state.user = action.payload;
             localStorage.setItem("userInfo", JSON.stringify(state.user));
         },
-        removeUser: (state) => {
+        clearUser: (state) => {
             state.user = null;
-            state.guestId = `guest_${new Date().getTime()}`; // Reset guest Id on logout
+            state.guestId = `guest_${new Date().getTime()}`;
             localStorage.removeItem("userInfo");
-            localStorage.setItem("guestId", state.guestId); // Set new guest Id in localStorage
+            localStorage.setItem("guestId", state.guestId);
         },
         generateNewGuestId: (state) => {
             state.guestId = `guest_${new Date().getTime()}`;
@@ -36,5 +36,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

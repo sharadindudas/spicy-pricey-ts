@@ -1,11 +1,9 @@
-import { useState } from "react";
+import toast from "react-hot-toast";
+import { RESTAURANT_MENU_IMG } from "@/utils/constants";
+import { AddToCart, MenuItemType, RestaurantMenuInfoType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addToCart } from "@/store/slices/cartSlice";
-import { AddToCart, ApiResponse, MenuItemType, RestaurantMenuInfoType } from "@/types/types";
-import { AxiosError } from "axios";
-import { axiosInstance } from "@/utils/axiosInstance";
-import { RESTAURANT_MENU_IMG } from "@/utils/constants";
-import toast from "react-hot-toast";
+import { useState } from "react";
 
 interface MenuItemProps {
     data: MenuItemType;
@@ -13,49 +11,44 @@ interface MenuItemProps {
 }
 
 const MenuItem = ({ data, resInfo }: MenuItemProps) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { name, price, defaultPrice, description, imageId, itemAttribute } = data;
     const { user, guestId } = useAppSelector((store) => store.user);
     const dispatch = useAppDispatch();
 
     const handleAddToCart = async () => {
         setIsLoading(true);
-        const toastId = toast.loading("Loading...");
-        const addToCartData: AddToCart = {
-            userId: user?._id,
-            guestId,
-            restaurant: {
-                id: resInfo?.id,
-                lat: Number(resInfo?.latLong?.split(",")[0]),
-                lng: Number(resInfo?.latLong?.split(",")[1]),
-                name: resInfo?.name,
-                city: resInfo?.city,
-                cloudinaryImageId: resInfo?.cloudinaryImageId,
-                areaName: resInfo?.areaName
-            },
-            cartItem: {
-                id: data?.id,
-                name: data?.name,
-                description: data?.description,
-                imageId: data?.imageId,
-                isVeg: data?.itemAttribute?.vegClassifier === "VEG" ? true : false,
-                price: data?.price ? price / 100 : defaultPrice / 100,
-                quantity: 1
-            }
-        };
         try {
-            const response = await axiosInstance.post<ApiResponse>("/cart/add", addToCartData);
-            if (response.data.success) {
-                dispatch(addToCart(response.data.data));
-                toast.success(response.data.message || "Item added to cart");
+            const addToCartData: AddToCart = {
+                userId: user?._id,
+                guestId,
+                restaurant: {
+                    id: resInfo?.id,
+                    lat: Number(resInfo?.latLong?.split(",")[0]),
+                    lng: Number(resInfo?.latLong?.split(",")[1]),
+                    name: resInfo?.name,
+                    city: resInfo?.city,
+                    cloudinaryImageId: resInfo?.cloudinaryImageId,
+                    areaName: resInfo?.areaName
+                },
+                cartItem: {
+                    id: data?.id,
+                    name: data?.name,
+                    description: data?.description,
+                    imageId: data?.imageId,
+                    isVeg: data?.itemAttribute?.vegClassifier === "VEG" ? true : false,
+                    price: data?.price ? price / 100 : defaultPrice / 100,
+                    quantity: 1
+                }
+            };
+            const response = await dispatch(addToCart(addToCartData)).unwrap();
+            if (response.success) {
+                toast.success(response.message);
             }
-        } catch (err) {
-            if (err instanceof AxiosError) {
-                toast.error(err.response?.data.message);
-            }
+        } catch (err: unknown) {
+            toast.error(err as string);
         } finally {
             setIsLoading(false);
-            toast.dismiss(toastId);
         }
     };
 

@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/store/hooks";
-import { removeCart } from "@/store/slices/cartSlice";
-import { removeLocation } from "@/store/slices/locationSlice";
-import { removeUser } from "@/store/slices/userSlice";
+import { clearCart } from "@/store/slices/cartSlice";
+import { clearLocation } from "@/store/slices/locationSlice";
+import { clearUser } from "@/store/slices/userSlice";
 import { ApiResponse } from "@/types/types";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
@@ -15,9 +15,9 @@ const useLogout = () => {
         try {
             const response = await axiosInstance.post<ApiResponse>("/auth/logout");
             if (response.data.success) {
-                dispatch(removeUser());
-                dispatch(removeLocation());
-                dispatch(removeCart());
+                dispatch(clearUser());
+                dispatch(clearLocation());
+                dispatch(clearCart());
                 toast.success(response.data.message || "Logged out successfully");
             }
         } catch (err) {
