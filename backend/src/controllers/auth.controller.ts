@@ -17,7 +17,7 @@ const signup = AsyncHandler(async (req: Request, res: Response<ApiResponse>) => 
         $or: [{ email }, { phone }]
     });
     if (userExists) {
-        throw new ErrorHandler("User already exists", 409);
+        throw new ErrorHandler("Email or phone is already registered", 409);
     }
 
     // Create new user
