@@ -9,14 +9,6 @@ interface CartResponse {
     data: Cart;
 }
 
-// Helper function for localStorage
-const loadCartFromStorage = () => {
-    return JSON.parse(localStorage.getItem("cart") as string) || null;
-};
-const saveCartToStorage = (cart: Cart) => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-};
-
 interface CartState {
     cart: null | Cart;
     loading: boolean;
@@ -24,7 +16,7 @@ interface CartState {
 }
 
 const initialState: CartState = {
-    cart: loadCartFromStorage(),
+    cart: null,
     loading: false,
     error: null
 };
@@ -109,7 +101,6 @@ const cartSlice = createSlice({
     reducers: {
         clearCart: (state) => {
             state.cart = null;
-            localStorage.removeItem("cart");
         }
     },
     extraReducers: (builder) => {
@@ -122,7 +113,6 @@ const cartSlice = createSlice({
             .addCase(fetchCart.fulfilled, (state, action) => {
                 state.loading = false;
                 state.cart = action.payload.data;
-                saveCartToStorage(action.payload.data);
             })
             .addCase(fetchCart.rejected, (state, action) => {
                 state.loading = false;
@@ -137,7 +127,6 @@ const cartSlice = createSlice({
             .addCase(addToCart.fulfilled, (state, action) => {
                 state.loading = false;
                 state.cart = action.payload.data;
-                saveCartToStorage(action.payload.data);
             })
             .addCase(addToCart.rejected, (state, action) => {
                 state.loading = false;
@@ -152,7 +141,6 @@ const cartSlice = createSlice({
             .addCase(mergeCart.fulfilled, (state, action) => {
                 state.loading = false;
                 state.cart = action.payload.data;
-                saveCartToStorage(action.payload.data);
             })
             .addCase(mergeCart.rejected, (state) => {
                 state.loading = false;
@@ -167,7 +155,6 @@ const cartSlice = createSlice({
             .addCase(updateItemQuantity.fulfilled, (state, action) => {
                 state.loading = false;
                 state.cart = action.payload.data;
-                saveCartToStorage(action.payload.data);
             })
             .addCase(updateItemQuantity.rejected, (state) => {
                 state.loading = false;
@@ -182,7 +169,6 @@ const cartSlice = createSlice({
             .addCase(removeCartItem.fulfilled, (state, action) => {
                 state.loading = false;
                 state.cart = action.payload.data;
-                saveCartToStorage(action.payload.data);
             })
             .addCase(removeCartItem.rejected, (state, action) => {
                 state.loading = false;

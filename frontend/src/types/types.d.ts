@@ -128,6 +128,7 @@ export interface Cart {
         areaName: string;
     };
     cartItems: CartItem[];
+    cartItemsCount: number;
     totalPrice: number;
     createdAt: Date;
     updatedAt: Date;

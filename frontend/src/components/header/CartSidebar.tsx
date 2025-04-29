@@ -14,7 +14,7 @@ const CartSidebar = () => {
 
     const { user, guestId } = useAppSelector((store) => store.user);
     const { cart } = useAppSelector((store) => store.cart);
-    const cartItemsCount: number = cart?.cartItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+    const cartItemsCount: number = cart?.cartItemsCount || 0;
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();

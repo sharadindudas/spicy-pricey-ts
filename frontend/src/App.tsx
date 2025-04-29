@@ -4,11 +4,10 @@ import { Toaster } from "react-hot-toast";
 import Home from "@/pages/Home";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import PageLoader from "@/components/loader/PageLoader";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchCart } from "@/store/slices/cartSlice";
-import Loader from "@/components/loader/Loader";
-import ShimmerMenu from "./components/loader/ShimmerMenu";
 
 const RestaurantMenu = lazy(() => import("@/pages/RestaurantMenu"));
 const Checkout = lazy(() => import("@/pages/Checkout"));
@@ -19,7 +18,6 @@ const App = () => {
     const { user, guestId } = useAppSelector((store) => store.user);
     const dispatch = useAppDispatch();
 
-    // Fetch cart data
     useEffect(() => {
         if (user && user._id) {
             dispatch(fetchCart({ userId: user._id }));
@@ -39,7 +37,7 @@ const App = () => {
                 <Route
                     path="/login"
                     element={
-                        <Suspense fallback={<Loader />}>
+                        <Suspense fallback={<PageLoader />}>
                             <Login />
                         </Suspense>
                     }
@@ -47,7 +45,7 @@ const App = () => {
                 <Route
                     path="/signup"
                     element={
-                        <Suspense fallback={<Loader />}>
+                        <Suspense fallback={<PageLoader />}>
                             <Signup />
                         </Suspense>
                     }
@@ -55,7 +53,7 @@ const App = () => {
                 <Route
                     path="/restaurant/menu/:resId"
                     element={
-                        <Suspense fallback={<ShimmerMenu />}>
+                        <Suspense fallback={<PageLoader />}>
                             <RestaurantMenu />
                         </Suspense>
                     }
@@ -63,7 +61,7 @@ const App = () => {
                 <Route
                     path="/checkout"
                     element={
-                        <Suspense fallback={<Loader />}>
+                        <Suspense fallback={<PageLoader />}>
                             <Checkout />
                         </Suspense>
                     }

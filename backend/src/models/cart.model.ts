@@ -1,4 +1,35 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
+
+interface CartItem {
+    id: string;
+    name?: string;
+    description?: string;
+    imageId?: string;
+    isVeg?: boolean;
+    price: number;
+    quantity: number;
+}
+
+interface Restaurant {
+    id: string;
+    lat: number;
+    lng: number;
+    name: string;
+    city: string;
+    cloudinaryImageId: string;
+    areaName: string;
+}
+
+interface Cart extends Document {
+    user?: Types.ObjectId;
+    guestId?: string;
+    restaurant: Restaurant;
+    cartItems: CartItem[];
+    cartItemsCount: number;
+    totalPrice: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
 
 const cartItemSchema = new Schema(
     {
@@ -64,7 +95,7 @@ const restaurantSchema = new Schema(
     { _id: false, versionKey: false }
 );
 
-const cartSchema = new Schema(
+const cartSchema: Schema<Cart> = new Schema(
     {
         user: {
             type: Schema.Types.ObjectId,
@@ -75,7 +106,8 @@ const cartSchema = new Schema(
         cartItems: [cartItemSchema],
         cartItemsCount: {
             type: Number,
-            required: true
+            required: true,
+            default: 0
         },
         totalPrice: {
             type: Number,
@@ -86,4 +118,4 @@ const cartSchema = new Schema(
     { timestamps: true, versionKey: false }
 );
 
-export const CartModel = model("Cart", cartSchema);
+export const CartModel = model<Cart>("Cart", cartSchema);

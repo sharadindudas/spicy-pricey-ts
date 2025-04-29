@@ -24,7 +24,6 @@ const useLogin = (reset: UseFormReset<LoginSchemaType>) => {
                 toast.success(response.data.message || "Logged in successfully");
                 dispatch(setUser(response.data.data as User));
                 reset();
-                localStorage.removeItem("cart");
                 await dispatch(mergeCart({ guestId }));
                 navigate("/");
             }
