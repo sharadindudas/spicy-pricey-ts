@@ -1,5 +1,5 @@
 {
-    "name": "backend",
+    "name": "spicy-pricey-backend",
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
@@ -37,3 +37,4 @@
         "typescript": "^5.8.3"
     }
 }
+
