@@ -21,7 +21,7 @@ export const userAuth = AsyncHandler(async (req, _res, next) => {
     if (!user) {
         throw new ErrorHandler("User does not exists", 404);
     }
-    // Pass the decoded payload and user data
+    // Pass the decoded payload and user details
     req.decoded = decodedPayload;
     req.user = user;
 
